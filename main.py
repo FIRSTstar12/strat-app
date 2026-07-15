@@ -1,5 +1,6 @@
 # Main Program
 from datetime import datetime
+import allianceFunctions
 import utilityFunctions
 import teamFunctions
 import eventFunctions
@@ -9,7 +10,7 @@ utilityFunctions.clear()
 choice = utilityFunctions.options()
 utilityFunctions.clear()
 
-if choice > 6:
+if choice > 7:
     print("Invalid choice")
 
 if choice < 5:
@@ -46,12 +47,15 @@ if choice < 5:
         year = int(input("What year would you like to look at?: "))
         utilityFunctions.clear()
         predictionFunctions.predictTeams(teamNumber,otherTeam,year)
+    
+else:
+    if choice == 5: #predicts alliance 
+        allianceFunctions.compareAlliances(allianceFunctions.buildAlliance(),allianceFunctions.buildAlliance(),2026)
+    elif choice == 6: #prints match info
+        matchCode = input("Please enter the match code: ")
+        print(eventFunctions.getMatchInfo(matchCode))
+    elif choice == 7: #prints event info
+        eventCode = input("Please enter the event code: ")
+        eventFunctions.getEventInfo(eventCode)
     else:
-        if choice == 5: #prints match info
-            matchCode = input("Please enter the match code: ")
-            print(eventFunctions.getMatchInfo(matchCode))
-        elif choice == 6: #prints event info
-            eventCode = input("Please enter the event code: ")
-            eventFunctions.getEventInfo(eventCode)
-        else:
-            print("Invalid Choice")
+        print("Invalid Choice")
