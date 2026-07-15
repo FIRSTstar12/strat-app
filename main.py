@@ -50,7 +50,8 @@ if choice < 5:
     
 else:
     if choice == 5: #predicts alliance 
-        allianceFunctions.compareAlliances(allianceFunctions.buildAlliance(),allianceFunctions.buildAlliance(),2026)
+        currentYear = datetime.now().year
+        allianceFunctions.compareAlliances(allianceFunctions.buildAlliance(),allianceFunctions.buildAlliance(),currentYear)
     elif choice == 6: #prints match info
         matchCode = input("Please enter the match code: ")
         print(eventFunctions.getMatchInfo(matchCode))

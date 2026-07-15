@@ -103,26 +103,24 @@ def compareTeams(team1, team2, year):
 
     utilityFunctions.clear()
 
-    print(f"\nComparing {team1} vs {team2}")
-    print("----------------------------")
-    print(" ")
-    print(f"{team1} Played {team1Stats['matches']} matches")
-    print(f"{team2} Played {team2Stats['matches']} matches")
-    print(" ")
-    print(f"{team1} Won {team1Stats['wins']} matches")
-    print(f"{team2} Won {team2Stats['wins']} matches")
-    print(" ")
-    print(f"{team1} Lost {team1Stats['losses']} matches")
-    print(f"{team2} Lost {team2Stats['losses']} matches")
-    print(" ")
-    print(f"{team1} Average Score: {team1Stats['average_score']:.2f}")
-    print(f"{team2} Average Score: {team2Stats['average_score']:.2f}")
-    print(" ")
-    print(f"{team1} Win %: {team1Stats['win_percentage']:.2f}%")
-    print(f"{team2} Win %: {team2Stats['win_percentage']:.2f}%")
-    print(" ")
-    print(f"{team1} has a rating of {calculateRating(team1Stats):.2f}")
-    print(f"{team2} has a rating of {calculateRating(team2Stats):.2f}")
+    rating1 = calculateRating(team1Stats)
+    rating2 = calculateRating(team2Stats)
+
+    rows = [
+        ("Matches", team1Stats['matches'], team2Stats['matches'], 0),
+        ("Wins", team1Stats['wins'], team2Stats['wins'], 0),
+        ("Losses", team1Stats['losses'], team2Stats['losses'], 0),
+        ("Win %", team1Stats['win_percentage'], team2Stats['win_percentage'], 1),
+        ("Avg Score", team1Stats['average_score'], team2Stats['average_score'], 1),
+        ("Rating", rating1, rating2, 1),
+    ]
+
+    print("=" * 25)
+    print(f"{'':<10}{team1:>7}{team2:>7}")
+    print("-" * 25)
+    for label, v1, v2, decimals in rows:
+        print(f"{label:<10}{v1:>7.{decimals}f}{v2:>7.{decimals}f}")
+    print("=" * 25)
 
 def calculateRating(stats):
     return (
