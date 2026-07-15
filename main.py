@@ -46,7 +46,11 @@ if choice < 5:
         otherTeam = int(input(f"What team do you want to compare to {teamNumber}?: "))
         year = int(input("What year would you like to look at?: "))
         utilityFunctions.clear()
-        predictionFunctions.predictTeams(teamNumber,otherTeam,year)
+        winner = predictionFunctions.predictTeams(teamNumber,otherTeam,year)
+        if winner is None:
+            print("Predicted Tie")
+        else:
+            print(f"Predicted Winner: {winner}")
     
 else:
     if choice == 5: #predicts alliance 

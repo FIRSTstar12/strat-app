@@ -17,9 +17,9 @@ def predictTeams(team1, team2, year):
     print(f"{team2} Rating: {team2Rating:.2f}")
 
     if team1Rating > team2Rating:
-        print(f"Prediction: Team {team1} wins")
+        return team1
     elif team2Rating > team1Rating:
-        print(f"Prediction: Team {team2} wins")
+        return team2
     else:
-        print("Prediction: Tie")
+        return None
 
