@@ -6,6 +6,26 @@ import utilityFunctions
 
 currentYear = datetime.now().year
 
+def getAverageRP(teamNumber, eventKey):
+    rankings = requests.get(
+        f"{keys.BASE_URL}/event/{eventKey}/rankings",
+        headers=keys.headers
+    ).json()
+
+    for team in rankings["rankings"]:
+        if team["team_key"] == f"frc{teamNumber}":
+            return team["sort_orders"][0]
+
+    return None
+
+def getOPR(teamNumber, eventKey):
+    oprs = requests.get(
+        f"{keys.BASE_URL}/event/{eventKey}/oprs",
+        headers=keys.headers
+    ).json()
+
+    return oprs["oprs"].get(f"frc{teamNumber}")
+
 def getInfo(data):
     print(f"Team Name: {data['nickname']}")
     print(f"City: {data['city']}")
@@ -29,14 +49,30 @@ def calculateStats(teamNumber, year):
         "wins": 0,
         "losses": 0,
         "ties": 0,
-        "total_score": 0
+        "win_percentage": 0,
+        "total_score": 0,
+        "average_score": 0,
+        "highest_score": 0,
+        "lowest_score": float("inf"),
+        "longest_win_streak": 0,
+        "average_rp": 0,
+        "average_opr": 0,
+        "average_dpr": 0,
+        "average_ccwm": 0,
+        "events_attened": 0,
     }
 
+    current_streak = 0
+    events = eventFunctions.getTeamEvents(teamNumber, year)
+
     for match in team_matches:
-        # info = eventFunctions.getMatchInfo(match["key"])
 
         red_score = match["alliances"]["red"]["score"]
         blue_score = match["alliances"]["blue"]["score"]
+
+        # Skip matches that haven't been played yet
+        if red_score == -1 or blue_score == -1:
+            continue
 
         red_teams = match["alliances"]["red"]["team_keys"]
         blue_teams = match["alliances"]["blue"]["team_keys"]
@@ -55,19 +91,40 @@ def calculateStats(teamNumber, year):
         stats["matches"] += 1
         stats["total_score"] += team_score
 
+        stats["highest_score"] = max(stats["highest_score"], team_score)
+        stats["lowest_score"] = min(stats["lowest_score"], team_score)
+
+        
+
+        for event in events:
+            stats["average_rp"] += getAverageRP(teamNumber, event["key"])
+            stats["average_opr"] += getOPR(teamNumber, year)
+        stats["average_rp"] /= len(event)
+        stats["average_opr"] /= len(event)
+
         if team_score > opponent_score:
             stats["wins"] += 1
+            current_streak += 1
+            stats["longest_win_streak"] = max(
+                stats["longest_win_streak"],
+                current_streak
+            )
+
         elif team_score < opponent_score:
             stats["losses"] += 1
+            current_streak = 0
+
         else:
             stats["ties"] += 1
+            current_streak = 0
 
     if stats["matches"] > 0:
         stats["average_score"] = stats["total_score"] / stats["matches"]
-        stats["win_percentage"] = stats["wins"] / stats["matches"] * 100
+        stats["win_percentage"] = (stats["wins"] / stats["matches"] * 100)
     else:
-        stats["average_score"] = 0
-        stats["win_percentage"] = 0
+        stats["lowest_score"] = 0
+        
+    stats["events_attened"] = len(events)
 
     return stats
 
@@ -78,7 +135,11 @@ def printStats(stats):
     print(f"Number of losses: {stats['losses']}")
     print(f"Ties: {stats['ties']}")
     print(f"Win %: {stats['win_percentage']:.2f}%")
+    print(f"Total Score: {stats['total_score']:.2f}")
     print(f"Average Score: {stats['average_score']:.2f}")
+    print(f"Highest Score: {stats['highest_score']}")
+    print(f"Lowest Score: {stats['lowest_score']:.2f}")
+    print(f"Longest win streak: {stats['longest_win_streak']}")
 
 def getTeam(teamNumber):
     response = requests.get(
@@ -110,8 +171,11 @@ def compareTeams(team1, team2, year):
         ("Matches", team1Stats['matches'], team2Stats['matches'], 0),
         ("Wins", team1Stats['wins'], team2Stats['wins'], 0),
         ("Losses", team1Stats['losses'], team2Stats['losses'], 0),
+        ("Ties",team1Stats['ties'], team2Stats['ties'], 0),
         ("Win %", team1Stats['win_percentage'], team2Stats['win_percentage'], 1),
         ("Avg Score", team1Stats['average_score'], team2Stats['average_score'], 1),
+        ("Highest Score", team1Stats['highest_score'], team2Stats['highest_score'], 1),
+        ("Lowest Score", team1Stats['lowest_score'], team2Stats['lowest_score'], 1),
         ("Rating", rating1, rating2, 1),
     ]
 
@@ -123,10 +187,14 @@ def compareTeams(team1, team2, year):
     print("=" * 25)
 
 def calculateRating(stats):
-    return (
-        stats["average_score"] * 0.6 +
-        stats["win_percentage"] * 0.4
-    )
+    rating = (
+    stats["win_percentage"] * 0.25 +
+    stats["average_score"] * 0.20 +
+    stats["average_margin"] * 0.20 +
+    stats["longest_win_streak"] * 0.05 +
+    stats["average_rp"] * 0.15 +
+    stats["opr"] * 0.15)
+    return rating
 
 def getTeamScore(match, teamNumber):
     red = match["alliances"]["red"]

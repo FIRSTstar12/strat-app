@@ -1,5 +1,4 @@
 import requests
-
 import keys
 
 
@@ -23,3 +22,13 @@ def getEventInfo(event):
 
     for match in matches:
         print(match["comp_level"], match["match_number"])
+
+def getTeamEvents(teamNumber, year):
+    url = f"{keys.BASE_URL}/team/frc{teamNumber}/events/{year}"
+
+    events = requests.get(
+        url,
+        headers=keys.headers
+    ).json()
+
+    return events
