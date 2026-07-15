@@ -33,13 +33,13 @@ def calculateStats(teamNumber, year):
     }
 
     for match in team_matches:
-        info = eventFunctions.getMatchInfo(match["key"])
+        # info = eventFunctions.getMatchInfo(match["key"])
 
-        red_score = info["alliances"]["red"]["score"]
-        blue_score = info["alliances"]["blue"]["score"]
+        red_score = match["alliances"]["red"]["score"]
+        blue_score = match["alliances"]["blue"]["score"]
 
-        red_teams = info["alliances"]["red"]["team_keys"]
-        blue_teams = info["alliances"]["blue"]["team_keys"]
+        red_teams = match["alliances"]["red"]["team_keys"]
+        blue_teams = match["alliances"]["blue"]["team_keys"]
 
         if f"frc{teamNumber}" in red_teams:
             team_score = red_score
@@ -95,19 +95,34 @@ def getTeam(teamNumber):
 def compareTeams(team1, team2, year):
     data = getTeam(team1)
     info = getTeam(team2)
+    utilityFunctions.clear()
     print(f"Calculating season stats for team {team1} {data['nickname']} from {year}")
     team1Stats = calculateStats(team1, year)
     print(f"Calculating season stats for team {team2} {info['nickname']} from {year}")
     team2Stats = calculateStats(team2, year)
 
+    utilityFunctions.clear()
+
     print(f"\nComparing {team1} vs {team2}")
     print("----------------------------")
-
+    print(" ")
+    print(f"{team1} Played {team1Stats['matches']} matches")
+    print(f"{team2} Played {team2Stats['matches']} matches")
+    print(" ")
+    print(f"{team1} Won {team1Stats['wins']} matches")
+    print(f"{team2} Won {team2Stats['wins']} matches")
+    print(" ")
+    print(f"{team1} Lost {team1Stats['losses']} matches")
+    print(f"{team2} Lost {team2Stats['losses']} matches")
+    print(" ")
     print(f"{team1} Average Score: {team1Stats['average_score']:.2f}")
     print(f"{team2} Average Score: {team2Stats['average_score']:.2f}")
-
+    print(" ")
     print(f"{team1} Win %: {team1Stats['win_percentage']:.2f}%")
     print(f"{team2} Win %: {team2Stats['win_percentage']:.2f}%")
+    print(" ")
+    print(f"{team1} has a rating of {calculateRating(team1Stats):.2f}")
+    print(f"{team2} has a rating of {calculateRating(team2Stats):.2f}")
 
 def calculateRating(stats):
     return (
@@ -115,19 +130,14 @@ def calculateRating(stats):
         stats["win_percentage"] * 0.4
     )
 
-def predictTeams(team1, team2, year):
-    team1Stats = calculateStats(team1, year)
-    team2Stats = calculateStats(team2, year)
+def getTeamScore(match, teamNumber):
+    red = match["alliances"]["red"]
+    blue = match["alliances"]["blue"]
 
-    team1Rating = calculateRating(team1Stats)
-    team2Rating = calculateRating(team2Stats)
+    if f"frc{teamNumber}" in red["team_keys"]:
+        return red["score"], blue["score"]
 
-    print(f"\n{team1} Rating: {team1Rating:.2f}")
-    print(f"{team2} Rating: {team2Rating:.2f}")
+    if f"frc{teamNumber}" in blue["team_keys"]:
+        return blue["score"], red["score"]
 
-    if team1Rating > team2Rating:
-        print(f"Prediction: Team {team1} wins")
-    elif team2Rating > team1Rating:
-        print(f"Prediction: Team {team2} wins")
-    else:
-        print("Prediction: Tie")
+    return None, None

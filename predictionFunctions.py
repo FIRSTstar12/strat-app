@@ -22,3 +22,4 @@ def predictTeams(team1, team2, year):
         print(f"Prediction: Team {team2} wins")
     else:
         print("Prediction: Tie")
+
