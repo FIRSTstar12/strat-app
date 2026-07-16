@@ -41,9 +41,10 @@ def intro():
     wait(1.5)
     print("Note you do need to be connected to the internet to use the program")
     wait(2)
+    input("Press Enter to continue")
+    clear()
 
 def options():
-    input("Press Enter to continue")
     clear()
     print("Options:")
     print("1. Look up stats for one team for one season")
@@ -56,4 +57,11 @@ def options():
     print("8. Pull new team data for one team from The Blue Alliance API")
     print("9. Pull new team data for multiple teams from The Blue Alliance API")
     print("10. Exit")
-    return int(input("Please select an option(1-10): "))
+
+    while True:
+        choice = input("Please select an option (1-10): ")
+        if choice.strip().isdigit():
+            choice_int = int(choice)
+            if 1 <= choice_int <= 10:
+                return choice_int
+        print("Invalid input. Please enter a number from 1 to 10.")
