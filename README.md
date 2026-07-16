@@ -11,10 +11,23 @@ stats, compare teams or alliances, predict winners, and save team data locally.
 
 ## Setup
 
-1. Obtain a TBA API key from The Blue Alliance (https://www.thebluealliance.com/) and set it in
-	`keys.py` by replacing the `API_KEY` value. The program uses `keys.py` to build API requests.
+1. Create `keys.py` with the following code in it:
+```python
+API_KEY = "YOUR API KEY HERE"
+BASE_URL = "https://www.thebluealliance.com/api/v3"
 
-2. Ensure you are connected to the internet when running the program.
+headers = {
+    "X-TBA-Auth-Key": API_KEY,
+    "accept": "application/json"
+}
+```
+
+2. Obtain a TBA API key from The Blue Alliance (https://www.thebluealliance.com/) and set it in `keys.py` by replacing `YOUR API KEY HERE`. The program uses `keys.py` to build API requests.
+
+3. Create a folder called `teamInfo` this is where all of the .json files will go if option 8 or 9 is selected
+
+4. Connect to your internet to pull everything
+
 
 ## Running
 
@@ -60,12 +73,6 @@ and other inputs depending on your choice.
 
 - The program depends on the TBA API and your API key; if requests fail, verify the key and
 	check for rate limits or network issues.
-- The `keyboard` package is used for a quit check; on some systems it may require elevated
-	permissions. If you run into issues, you can modify `main.py` to remove/replace that check.
-
-## Contributing
-
-Feel free to open issues or submit PRs to improve error handling, refactor input handling,
-or add unit tests.
+- If it errors please make a pr so I can fix it
 
 ---
