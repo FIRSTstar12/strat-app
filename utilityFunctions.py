@@ -1,6 +1,12 @@
 import os
 import time
+import json
+from datetime import datetime
+from teamFunctions import getLifetimeStats
 
+from teamFunctions import getTeam
+
+currentYear = datetime.now().year
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -8,6 +14,26 @@ def clear():
 def wait(sec):
     time.sleep(sec)
 
+def pullTeamData(teamNumber):
+    data = getTeam(teamNumber)
+    lifetimeStats = getLifetimeStats(teamNumber)
+    folder = "teamInfo"
+    filename = f"{teamNumber}.json"
+    filepath = os.path.join(folder, filename)
+
+    if data is None:
+        print(f"No data returned for team {teamNumber}, skipping save.")
+        return
+
+    if os.path.exists(filepath):
+        print("File found, overwriting...")
+    else:
+        print("File not found, creating new one...")
+
+    data["stats"] = lifetimeStats
+
+    with open(filepath, "w") as file:
+        json.dump(data, file, indent=4)
 
 def options():
     print("Welcome to the strat helper!")
@@ -24,4 +50,5 @@ def options():
     print("5. Predict which alliance will win")
     print("6. Get match data")
     print("7. Get event data")
-    return int(input("Please select an option(1-7): "))
+    print("8. Pull new team data from The Blue Alliance API")
+    return int(input("Please select an option(1-8): "))

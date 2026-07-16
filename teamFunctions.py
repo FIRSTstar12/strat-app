@@ -27,8 +27,10 @@ def getOPR(teamNumber, eventKey):
         f"{keys.BASE_URL}/event/{eventKey}/oprs",
         headers=keys.headers
     ).json()
-
-    return oprs["oprs"].get(f"frc{teamNumber}")
+    
+    if oprs is None:
+        return None
+    return oprs.get("oprs", {}).get(f"frc{teamNumber}")
 
 def getInfo(data):
     print(f"Team Name: {data['nickname']}")
@@ -76,7 +78,7 @@ def calculateStats(teamNumber, year):
         "total_score": 0,
         "average_score": 0,
         "highest_score": 0,
-        "lowest_score": float("inf"),
+        "lowest_score": None,
         "longest_win_streak": 0,
         "average_rp": 0,
         "average_opr": 0,
@@ -99,6 +101,10 @@ def calculateStats(teamNumber, year):
 
         if team_score is None:
             continue
+
+        if team_score is not None:
+            if stats["lowest_score"] is None or team_score < stats["lowest_score"]:
+                stats["lowest_score"] = team_score
 
         stats["matches"] += 1
         stats["total_score"] += team_score
@@ -202,3 +208,19 @@ def getTeamScore(match, teamNumber):
         return blue["score"], red["score"]
 
     return None, None
+
+def getLifetimeStats(teamNumber):
+    lifetime_stats = {}
+    data = getTeam(teamNumber)
+    if data is None:
+        print(f"No data returned for team {teamNumber}. Cannot calculate lifetime stats.")
+        return None
+    rookie_year = data.get("rookie_year")
+    if rookie_year is None:
+        print(f"No rookie year found for team {teamNumber}. Cannot calculate lifetime stats.")
+        return None
+    for year in range(rookie_year, currentYear + 1):
+        print(f"Calculating season stats for team {teamNumber} {data['nickname']} from {year}")
+        stats = calculateStats(teamNumber, year)
+        lifetime_stats[year] = stats
+    return lifetime_stats
