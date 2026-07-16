@@ -35,11 +35,14 @@ def pullTeamData(teamNumber):
     with open(filepath, "w") as file:
         json.dump(data, file, indent=4)
 
-def options():
+def intro():
+    clear()
     print("Welcome to the strat helper!")
     wait(1.5)
     print("Note you do need to be connected to the internet to use the program")
     wait(2)
+
+def options():
     input("Press Enter to continue")
     clear()
     print("Options:")
@@ -50,5 +53,7 @@ def options():
     print("5. Predict which alliance will win")
     print("6. Get match data")
     print("7. Get event data")
-    print("8. Pull new team data from The Blue Alliance API")
-    return int(input("Please select an option(1-8): "))
+    print("8. Pull new team data for one team from The Blue Alliance API")
+    print("9. Pull new team data for multiple teams from The Blue Alliance API")
+    print("10. Exit")
+    return int(input("Please select an option(1-10): "))
