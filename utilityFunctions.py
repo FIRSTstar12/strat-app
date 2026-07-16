@@ -3,8 +3,15 @@ import time
 import json
 from datetime import datetime
 from teamFunctions import getLifetimeStats
-
 from teamFunctions import getTeam
+from plyer import notification
+
+def send_notification(message):
+    notification.notify(
+        title="FRC Stats Analyzer",
+        message=message,
+        timeout=5
+    )
 
 currentYear = datetime.now().year
 

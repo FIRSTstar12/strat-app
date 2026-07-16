@@ -40,3 +40,4 @@ def compareAlliances(alliance1, alliance2, year):
         print("Alliance 1 predicted winner")
     else:
         print("Alliance 2 predicted winner")
+    utilityFunctions.send_notification("Alliance analysis complete!")

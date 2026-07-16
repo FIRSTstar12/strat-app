@@ -1,6 +1,6 @@
 # Main Program
 from datetime import datetime
-from utilityFunctions import clear, intro, pullTeamData
+from utilityFunctions import clear, intro, pullTeamData, send_notification
 from teamFunctions import getTeam
 from teamFunctions import calculateStats    
 from teamFunctions import printStats
@@ -58,6 +58,7 @@ while True:
                 printStats(stats)
                 year += 1
                 print(" ")
+            send_notification("Lifetime Stat Search Complete")
 
         elif choice == 3:  # Compares two teams
             otherTeam = int(input(f"What team do you want to compare to {teamNumber}?: "))
@@ -74,6 +75,7 @@ while True:
                 print("Predicted Tie")
             else:
                 print(f"Predicted Winner: {winner}")
+            send_notification("Prediction Complete")
 
     else:
         if choice == 5:  # predicts alliance
@@ -93,5 +95,6 @@ while True:
             teamNumbers = [int(x.strip()) for x in teamNumbers.split(",")]
             for teamNumber in teamNumbers:
                 pullTeamData(teamNumber)
+            send_notification(f"Data has been collected for {teamNumbers}")
 
     input("Press Enter to continue...")
