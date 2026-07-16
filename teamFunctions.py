@@ -3,10 +3,11 @@ import eventFunctions
 import keys
 from datetime import datetime
 import utilityFunctions
+from predictionFunctions import calculateRating
 
 currentYear = datetime.now().year
 
-def getAverageRP(teamNumber, eventKey):
+def eventStats(teamNumber, eventKey):
     rankings = requests.get(
         f"{keys.BASE_URL}/event/{eventKey}/rankings",
         headers=keys.headers
@@ -14,7 +15,10 @@ def getAverageRP(teamNumber, eventKey):
 
     for team in rankings["rankings"]:
         if team["team_key"] == f"frc{teamNumber}":
-            return team["sort_orders"][0]
+            return {
+                "average_rp": team["sort_orders"][0],
+                "rank": team["rank"]
+            }
 
     return None
 
@@ -41,9 +45,28 @@ def getTeamMatches(team, year):
 
     return matches
 
-def calculateStats(teamNumber, year):
-    team_matches = getTeamMatches(teamNumber, year)
+def addEventStats(stats, teamNumber, year):
+    events = eventFunctions.getTeamEvents(teamNumber, year)
 
+    stats["events_attended"] = len(events)
+
+    for event in events:
+        event_data = eventStats(teamNumber, event["key"])
+        opr = getOPR(teamNumber, event["key"])
+
+        if event_data:
+            stats["average_rp"] += event_data["average_rp"]
+            stats["average_rank"] += event_data["rank"]
+
+        if opr is not None:
+            stats["average_opr"] += opr
+
+    if events:
+        stats["average_rp"] /= len(events)
+        stats["average_rank"] /= len(events)
+        stats["average_opr"] /= len(events)
+
+def calculateStats(teamNumber, year):
     stats = {
         "matches": 0,
         "wins": 0,
@@ -57,35 +80,24 @@ def calculateStats(teamNumber, year):
         "longest_win_streak": 0,
         "average_rp": 0,
         "average_opr": 0,
-        "average_dpr": 0,
-        "average_ccwm": 0,
-        "events_attened": 0,
+        "events_attended": 0,
+        "average_rank": 0,
     }
+    team_matches = getTeamMatches(teamNumber, year)
 
     current_streak = 0
-    events = eventFunctions.getTeamEvents(teamNumber, year)
 
     for match in team_matches:
 
         red_score = match["alliances"]["red"]["score"]
         blue_score = match["alliances"]["blue"]["score"]
 
-        # Skip matches that haven't been played yet
         if red_score == -1 or blue_score == -1:
             continue
 
-        red_teams = match["alliances"]["red"]["team_keys"]
-        blue_teams = match["alliances"]["blue"]["team_keys"]
+        team_score, opponent_score = getTeamScore(match, teamNumber)
 
-        if f"frc{teamNumber}" in red_teams:
-            team_score = red_score
-            opponent_score = blue_score
-
-        elif f"frc{teamNumber}" in blue_teams:
-            team_score = blue_score
-            opponent_score = red_score
-
-        else:
+        if team_score is None:
             continue
 
         stats["matches"] += 1
@@ -94,13 +106,6 @@ def calculateStats(teamNumber, year):
         stats["highest_score"] = max(stats["highest_score"], team_score)
         stats["lowest_score"] = min(stats["lowest_score"], team_score)
 
-        
-
-        for event in events:
-            stats["average_rp"] += getAverageRP(teamNumber, event["key"])
-            stats["average_opr"] += getOPR(teamNumber, year)
-        stats["average_rp"] /= len(event)
-        stats["average_opr"] /= len(event)
 
         if team_score > opponent_score:
             stats["wins"] += 1
@@ -123,8 +128,8 @@ def calculateStats(teamNumber, year):
         stats["win_percentage"] = (stats["wins"] / stats["matches"] * 100)
     else:
         stats["lowest_score"] = 0
-        
-    stats["events_attened"] = len(events)
+    
+    addEventStats(stats, teamNumber, year)
 
     return stats
 
@@ -185,16 +190,6 @@ def compareTeams(team1, team2, year):
     for label, v1, v2, decimals in rows:
         print(f"{label:<10}{v1:>7.{decimals}f}{v2:>7.{decimals}f}")
     print("=" * 25)
-
-def calculateRating(stats):
-    rating = (
-    stats["win_percentage"] * 0.25 +
-    stats["average_score"] * 0.20 +
-    stats["average_margin"] * 0.20 +
-    stats["longest_win_streak"] * 0.05 +
-    stats["average_rp"] * 0.15 +
-    stats["opr"] * 0.15)
-    return rating
 
 def getTeamScore(match, teamNumber):
     red = match["alliances"]["red"]

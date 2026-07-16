@@ -7,6 +7,7 @@ import eventFunctions
 import predictionFunctions
 
 utilityFunctions.clear()
+# print(teamFunctions.eventStats(1619,"2026code"))
 choice = utilityFunctions.options()
 utilityFunctions.clear()
 

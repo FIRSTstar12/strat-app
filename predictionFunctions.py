@@ -2,8 +2,11 @@ import teamFunctions
 
 def calculateRating(stats):
     return (
-        stats["average_score"] * 0.6 +
-        stats["win_percentage"] * 0.4
+        stats["win_percentage"] * 0.25 +
+        stats["average_score"] * 0.20 +
+        stats["longest_win_streak"] * 0.05 +
+        stats["average_rp"] * 0.15 +
+        stats["average_opr"] * 0.15
     )
 
 def predictTeams(team1, team2, year):
