@@ -13,6 +13,10 @@ def eventStats(teamNumber, eventKey):
         headers=keys.headers
     ).json()
 
+    if rankings is None or rankings.get("rankings") is None:
+        print(f"No ranking data for event {eventKey}, skipping.")
+        return None
+
     for team in rankings["rankings"]:
         if team["team_key"] == f"frc{teamNumber}":
             return {
@@ -27,7 +31,7 @@ def getOPR(teamNumber, eventKey):
         f"{keys.BASE_URL}/event/{eventKey}/oprs",
         headers=keys.headers
     ).json()
-    
+
     if oprs is None:
         return None
     return oprs.get("oprs", {}).get(f"frc{teamNumber}")
