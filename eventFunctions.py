@@ -36,9 +36,19 @@ def getTeamEvents(teamNumber, year):
 def getEventTeams(event):
     url = f"{keys.BASE_URL}/event/{event}/teams"
 
-    teams = requests.get(
+    response = requests.get(
         url,
         headers=keys.headers
-    ).json()
+    )
+
+    if not response.ok:
+        print(f"Error {response.status_code}: {response.text}")
+        return []
+
+    teams = response.json()
+
+    if teams is None:
+        print(f"No team data found for event {event}.")
+        return []
 
     return [team["team_number"] for team in teams]

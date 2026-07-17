@@ -2,19 +2,18 @@
 from datetime import datetime
 import os
 from utilityFunctions import clear, get_team_numbers, getLastUpdatedYear, intro, pullTeamData, send_notification
-from teamFunctions import getTeam
+from teamFunctions import getTeam, pullMultipleTeamData
 from teamFunctions import calculateStats    
 from teamFunctions import printStats
 from teamFunctions import compareTeams
 from predictionFunctions import predictTeams
 from allianceFunctions import compareAlliances, buildAlliance
 from utilityFunctions import options
-from eventFunctions import getMatchInfo, getEventInfo
+from eventFunctions import getEventTeams, getMatchInfo, getEventInfo
 import keyboard
 
 clear()
 intro()
-# print(teamFunctions.eventStats(1619,"2026code"))
 
 if os.path.exists("teamInfo") == False:
     found = input("No teamInfo folder found, would you like to create one? (y/n): ")
@@ -56,19 +55,28 @@ while True:
 
         elif choice == 2:  # Gets data for team's lifetime
             clear()
-            data = getTeam(teamNumber)
-            currentYear = datetime.now().year
-            year = data['rookie_year']
-            while year != currentYear:
-                print(f"Calculating season stats for team {teamNumber} {data['nickname']} from {year}")
-                stats = calculateStats(teamNumber, year)
-                printStats(stats)
-                year += 1
-                print(" ")
-            send_notification("Lifetime Stat Search Complete")
+            if not os.path.exists(f"teamInfo/{teamNumber}.json"):
+                print(f"Team {teamNumber} does not exist in teamInfo folder, pulling data from TBA...")
+                pullTeamData(teamNumber)
+            # data = getTeam(teamNumber)
+            # currentYear = datetime.now().year
+            # year = data['rookie_year']
+            # while year != currentYear:
+            #     print(f"Calculating season stats for team {teamNumber} {data['nickname']} from {year}")
+            #     stats = calculateStats(teamNumber, year)
+            #     printStats(stats)
+            #     year += 1
+            #     print(" ")
+            send_notification(f"Lifetime Stat Search Complete for team {teamNumber} {data['nickname']}")
 
         elif choice == 3:  # Compares two teams
+            if not os.path.exists(f"teamInfo/{teamNumber}.json"):
+                print(f"Team {teamNumber} does not exist in teamInfo folder, pulling data from TBA...")
+                pullTeamData(teamNumber)
             otherTeam = int(input(f"What team do you want to compare to {teamNumber}?: "))
+            if not os.path.exists(f"teamInfo/{otherTeam}.json"):
+                print(f"Team {otherTeam} does not exist in teamInfo folder, pulling data from TBA...")
+                pullTeamData(otherTeam)
             year = int(input("What year would you like to look at?: "))
             clear()
             compareTeams(teamNumber, otherTeam, year)
@@ -98,17 +106,15 @@ while True:
             teamNumber = int(input("Please enter the team number: "))
             pullTeamData(teamNumber)
         elif choice == 9:  # pulls new team data for multiple teams from TBA
-            teamNumbers = input("Please enter the team numbers separated by commas: ")
-            teamNumbers = [int(x.strip()) for x in teamNumbers.split(",")]
-            currentNums = get_team_numbers("teamInfo")
-            for teamNumber in teamNumbers:
-                update = getLastUpdatedYear(teamNumber)
-                if teamNumber in currentNums and os.path.exists(f"teamInfo/{teamNumber}.json") and update is not None and update >= datetime.now().year:
-                    # send_notification(f"Team {teamNumber} already exists in teamInfo folder, skipping...")
-                    teamNumbers.remove(teamNumber)
-            send_notification(f"Pulling data for teams: {teamNumbers}")
-            for teamNumber in teamNumbers:
-                pullTeamData(teamNumber)
-            send_notification(f"Data has been collected for {teamNumbers}")
+            manualOrAuto = input("Would you like to enter the team numbers manually or automatically? (m/a): ")
+            if manualOrAuto.lower() == "m":
+                pullMultipleTeamData()
+            else:
+                eventCode = input("Please enter the event code: ")
+                teams = getEventTeams(eventCode)
+                for team in teams:
+                    pullTeamData(team)
+                send_notification(f"Data has been collected for {eventCode}")
+        
 
     input("Press Enter to continue...")

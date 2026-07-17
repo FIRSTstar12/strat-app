@@ -84,7 +84,7 @@ def pullTeamData(teamNumber):
 
     with open(filepath, "w") as file:
         json.dump(data, file, indent=4)
-    send_notification(f"Data saved for team {teamNumber}")
+    send_notification(f"Data saved for team {teamNumber} {data['nickname']})")
 
 def intro():
     clear()

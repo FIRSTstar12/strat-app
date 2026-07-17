@@ -1,3 +1,4 @@
+import os
 import requests
 import eventFunctions
 import keys
@@ -229,3 +230,17 @@ def getLifetimeStats(teamNumber):
         stats = calculateStats(teamNumber, year)
         lifetime_stats[year] = stats
     return lifetime_stats
+
+def pullMultipleTeamData(teamNumbers):
+    teamNumbers = input("Please enter the team numbers separated by commas: ")
+    teamNumbers = [int(x.strip()) for x in teamNumbers.split(",")]
+    currentNums = utilityFunctions.get_team_numbers("teamInfo")
+    for teamNumber in teamNumbers:
+        update = utilityFunctions.getLastUpdatedYear(teamNumber)
+        if teamNumber in currentNums and os.path.exists(f"teamInfo/{teamNumber}.json") and update is not None and update >= datetime.now().year:
+                    # send_notification(f"Team {teamNumber} already exists in teamInfo folder, skipping...")
+            teamNumbers.remove(teamNumber)
+        utilityFunctions.send_notification(f"Pulling data for teams: {teamNumbers}")
+        for teamNumber in teamNumbers:
+            utilityFunctions.pullTeamData(teamNumber)
+        utilityFunctions.send_notification(f"Data has been collected for {teamNumbers}")
