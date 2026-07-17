@@ -2,16 +2,37 @@ import os
 import time
 import json
 from datetime import datetime
+
+import requests
+from keys import WEBHOOK_URL
 from teamFunctions import getLifetimeStats
 from teamFunctions import getTeam
 from plyer import notification
 
 def send_notification(message):
-    notification.notify(
+    
+    payload = {
+        "content": message
+    }
+
+    response = requests.post(WEBHOOK_URL, json=payload)
+
+    if response.status_code == 204:
+        notification.notify(
         title="FRC Stats Analyzer",
-        message=message,
+        message="Discord notification sent!",
         timeout=5
     )
+        # print("Discord notification sent!")
+    else:
+        print(f"Failed to send notification: {response.status_code}")
+        notification.notify(
+        title="FRC Stats Analyzer",
+        message=f"Failed to send notification: {response.status_code}",
+        timeout=5
+        )
+        # print(response.text)
+
 
 currentYear = datetime.now().year
 
