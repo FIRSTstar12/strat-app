@@ -32,3 +32,13 @@ def getTeamEvents(teamNumber, year):
     ).json()
 
     return events
+
+def getEventTeams(event):
+    url = f"{keys.BASE_URL}/event/{event}/teams"
+
+    teams = requests.get(
+        url,
+        headers=keys.headers
+    ).json()
+
+    return [team["team_number"] for team in teams]
