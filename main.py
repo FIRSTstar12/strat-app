@@ -1,6 +1,7 @@
 # Main Program
 from datetime import datetime
-from utilityFunctions import clear, intro, pullTeamData, send_notification
+import os
+from utilityFunctions import clear, get_team_numbers, getLastUpdatedYear, intro, pullTeamData, send_notification
 from teamFunctions import getTeam
 from teamFunctions import calculateStats    
 from teamFunctions import printStats
@@ -13,7 +14,13 @@ import keyboard
 
 clear()
 intro()
-# print(teamFunctions.eventStats(1619,"2026code"))\
+# print(teamFunctions.eventStats(1619,"2026code"))
+
+if os.path.exists("teamInfo") == False:
+    found = input("No teamInfo folder found, would you like to create one? (y/n): ")
+    if found == "y":
+        os.mkdir("teamInfo")
+        print("teamInfo folder created")
 while True:
     clear()
     choice = options()
@@ -93,6 +100,13 @@ while True:
         elif choice == 9:  # pulls new team data for multiple teams from TBA
             teamNumbers = input("Please enter the team numbers separated by commas: ")
             teamNumbers = [int(x.strip()) for x in teamNumbers.split(",")]
+            currentNums = get_team_numbers("teamInfo")
+            for teamNumber in teamNumbers:
+                update = getLastUpdatedYear(teamNumber)
+                if teamNumber in currentNums and os.path.exists(f"teamInfo/{teamNumber}.json") and update is not None and update >= datetime.now().year:
+                    # send_notification(f"Team {teamNumber} already exists in teamInfo folder, skipping...")
+                    teamNumbers.remove(teamNumber)
+            send_notification(f"Pulling data for teams: {teamNumbers}")
             for teamNumber in teamNumbers:
                 pullTeamData(teamNumber)
             send_notification(f"Data has been collected for {teamNumbers}")

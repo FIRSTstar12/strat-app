@@ -2,12 +2,34 @@ import os
 import time
 import json
 from datetime import datetime
-
 import requests
 from keys import WEBHOOK_URL
 from teamFunctions import getLifetimeStats
 from teamFunctions import getTeam
 from plyer import notification
+from pathlib import Path
+
+def get_team_numbers(folder):
+    teams = []
+
+    for file in Path(folder).iterdir():
+        if file.is_file() and file.stem.isdigit():
+            teams.append(int(file.stem))
+
+    return sorted(teams)
+
+def getLastUpdatedYear(teamnumber):
+    file = Path(f"teamInfo/{teamnumber}.json")
+
+    if not file.exists():
+        return None
+    last_updated_year = datetime.fromtimestamp(file.stat().st_mtime).year
+
+    return last_updated_year
+
+# team_numbers = get_team_numbers("stats")
+
+# print(team_numbers)
 
 def send_notification(message):
     
@@ -50,7 +72,7 @@ def pullTeamData(teamNumber):
     filepath = os.path.join(folder, filename)
 
     if data is None:
-        print(f"No data returned for team {teamNumber}, skipping save.")
+        send_notification(f"No data returned for team {teamNumber}, skipping save.")
         return
 
     if os.path.exists(filepath):
@@ -62,6 +84,7 @@ def pullTeamData(teamNumber):
 
     with open(filepath, "w") as file:
         json.dump(data, file, indent=4)
+    send_notification(f"Data saved for team {teamNumber}")
 
 def intro():
     clear()
