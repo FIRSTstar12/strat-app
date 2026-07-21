@@ -5,6 +5,7 @@ import keys
 from datetime import datetime
 import utilityFunctions
 from predictionFunctions import calculateRating
+import json
 
 currentYear = datetime.now().year
 
@@ -156,6 +157,10 @@ def printStats(stats):
     print(f"Highest Score: {stats['highest_score']}")
     print(f"Lowest Score: {stats['lowest_score']:.2f}")
     print(f"Longest win streak: {stats['longest_win_streak']}")
+    print(f"Average RP: {stats['average_rp']:.2f}")
+    print(f"Average OPR: {stats['average_opr']:.2f}")
+    print(f"Events Attended: {stats['events_attended']}")
+    print(f"Average Rank: {stats['average_rank']:.2f}")
 
 def getTeam(teamNumber):
     response = requests.get(
@@ -170,13 +175,15 @@ def getTeam(teamNumber):
         return None
 
 def compareTeams(team1, team2, year):
-    data = getTeam(team1)
-    info = getTeam(team2)
+    with open(f"teamInfo/{team1}.json", 'r') as file:
+        data = json.load(file)
+    with open(f"teamInfo/{team2}.json", 'r') as file:
+        info = json.load(file)
     utilityFunctions.clear()
-    print(f"Calculating season stats for team {team1} {data['nickname']} from {year}")
-    team1Stats = calculateStats(team1, year)
-    print(f"Calculating season stats for team {team2} {info['nickname']} from {year}")
-    team2Stats = calculateStats(team2, year)
+    print(f"Reading season stats for team {team1} {data['nickname']} from {year}")
+    team1Stats = data['stats'][str(year)]
+    print(f"Reading season stats for team {team2} {info['nickname']} from {year}")
+    team2Stats = info['stats'][str(year)]
 
     utilityFunctions.clear()
 

@@ -1,3 +1,6 @@
+import os
+
+from flask import json
 from predictionFunctions import calculateRating
 import teamFunctions
 import utilityFunctions
@@ -18,17 +21,25 @@ def compareAlliances(alliance1, alliance2, year):
     alliance2Score = 0
 
     for team in alliance1:
-        data = teamFunctions.getTeam(team)
-        print(f"Calculating season stats for team {team} {data['nickname']} from {year}")
-        stats = teamFunctions.calculateStats(team, year)
+        if not os.path.exists(f"teamInfo/{team}.json"):
+            print(f"Team {team} does not exist in teamInfo folder, pulling data from TBA...")
+            utilityFunctions.pullTeamData(team)
+        with open(f"teamInfo/{team}.json", 'r') as file:
+            data = json.load(file)
+        print(f"Reading season stats for team {team} {data['nickname']} from {year}")
+        stats = data['stats'][str(year)]
         alliance1Score += calculateRating(stats)
     
     print("")
 
     for team in alliance2:
-        info = teamFunctions.getTeam(team)
-        print(f"Calculating season stats for team {team} {info['nickname']} from {year}")
-        stats = teamFunctions.calculateStats(team, year)
+        if not os.path.exists(f"teamInfo/{team}.json"):
+            print(f"Team {team} does not exist in teamInfo folder, pulling data from TBA...")
+            utilityFunctions.pullTeamData(team)
+        with open(f"teamInfo/{team}.json", 'r') as file:
+            data = json.load(file)
+        print(f"Reading season stats for team {team} {data['nickname']} from {year}")
+        stats = data['stats'][str(year)]
         alliance2Score += calculateRating(stats)
 
     print("")

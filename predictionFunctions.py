@@ -1,4 +1,5 @@
 import teamFunctions
+import json
 
 def calculateRating(stats):
     return (
@@ -10,8 +11,12 @@ def calculateRating(stats):
     )
 
 def predictTeams(team1, team2, year):
-    team1Stats = teamFunctions.calculateStats(team1, year)
-    team2Stats = teamFunctions.calculateStats(team2, year)
+    with open(f"teamInfo/{team1}.json", 'r') as file:
+        data = json.load(file)
+    team1Stats = data['stats'][str(year)]
+    with open(f"teamInfo/{team2}.json", 'r') as file:
+        info = json.load(file)
+    team2Stats = info['stats'][str(year)]
 
     team1Rating = calculateRating(team1Stats)
     team2Rating = calculateRating(team2Stats)

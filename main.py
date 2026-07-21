@@ -11,6 +11,7 @@ from allianceFunctions import compareAlliances, buildAlliance
 from utilityFunctions import options
 from eventFunctions import getEventTeams, getMatchInfo, getEventInfo
 import keyboard
+import json
 
 clear()
 intro()
@@ -48,25 +49,35 @@ while True:
         if choice == 1:  # Gets data for one team in one season
             year = int(input("What year would you like to look at?: "))
             clear()
-            data = getTeam(teamNumber)
-            print(f"Calculating season stats for team {teamNumber} {data['nickname']} from {year}")
-            stats = calculateStats(teamNumber, year)
-            printStats(stats)
+            if not os.path.exists(f"teamInfo/{teamNumber}.json"):
+                data = getTeam(teamNumber)
+                print(f"Calculating season stats for team {teamNumber} {data['nickname']} from {year}")
+                stats = calculateStats(teamNumber, year)
+                printStats(stats)
+            else:
+                with open(f"teamInfo/{teamNumber}.json", 'r') as file:
+                    data = json.load(file)
+                # data = getTeam(teamNumber)
+                print(f"Reading season stats for team {teamNumber} {data['nickname']} from {year}")
+                stats = data['stats'][str(year)]
+                printStats(stats)
 
         elif choice == 2:  # Gets data for team's lifetime
             clear()
             if not os.path.exists(f"teamInfo/{teamNumber}.json"):
                 print(f"Team {teamNumber} does not exist in teamInfo folder, pulling data from TBA...")
                 pullTeamData(teamNumber)
-            # data = getTeam(teamNumber)
-            # currentYear = datetime.now().year
-            # year = data['rookie_year']
-            # while year != currentYear:
-            #     print(f"Calculating season stats for team {teamNumber} {data['nickname']} from {year}")
-            #     stats = calculateStats(teamNumber, year)
-            #     printStats(stats)
-            #     year += 1
-            #     print(" ")
+            with open(f"teamInfo/{teamNumber}.json", 'r') as file:
+                    data = json.load(file)
+            
+            currentYear = datetime.now().year
+            year = data['rookie_year']
+            while year != currentYear:
+                # print(f"Calculating season stats for team {teamNumber} {data['nickname']} from {year}")
+                stats = data['stats'][str(year)]
+                printStats(stats)
+                year += 1
+                print(" ")
             send_notification(f"Lifetime Stat Search Complete for team {teamNumber} {data['nickname']}")
 
         elif choice == 3:  # Compares two teams
@@ -82,7 +93,13 @@ while True:
             compareTeams(teamNumber, otherTeam, year)
 
         elif choice == 4:  # Predicts who would win between two teams
+            if not os.path.exists(f"teamInfo/{teamNumber}.json"):
+                print(f"Team {teamNumber} does not exist in teamInfo folder, pulling data from TBA...")
+                pullTeamData(teamNumber)
             otherTeam = int(input(f"What team do you want to compare to {teamNumber}?: "))
+            if not os.path.exists(f"teamInfo/{otherTeam}.json"):
+                print(f"Team {otherTeam} does not exist in teamInfo folder, pulling data from TBA...")
+                pullTeamData(otherTeam)
             year = int(input("What year would you like to look at?: "))
             clear()
             winner = predictTeams(teamNumber, otherTeam, year)
