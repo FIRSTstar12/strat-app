@@ -1,6 +1,5 @@
 import os
-
-from flask import json
+import json
 from predictionFunctions import calculateRating
 import teamFunctions
 import utilityFunctions

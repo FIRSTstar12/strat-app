@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 import requests
 from keys import WEBHOOK_URL
-from teamFunctions import getLifetimeStats
+from teamFunctions import calculateStats, getLifetimeStats
 from teamFunctions import getTeam
 from plyer import notification
 from pathlib import Path
@@ -66,21 +66,23 @@ def wait(sec):
 
 def pullTeamData(teamNumber):
     data = getTeam(teamNumber)
-    lifetimeStats = getLifetimeStats(teamNumber)
+    # lifetimeStats = getLifetimeStats(teamNumber)
     folder = "teamInfo"
     filename = f"{teamNumber}.json"
     filepath = os.path.join(folder, filename)
 
-    if data is None:
-        send_notification(f"No data returned for team {teamNumber}, skipping save.")
-        return
-
     if os.path.exists(filepath):
-        print("File found, overwriting...")
-    else:
-        print("File not found, creating new one...")
+        print("File found, refreshing this year's stats only...")
+        with open(filepath, 'r') as file:
+            existing = json.load(file)
 
-    data["stats"] = lifetimeStats
+        stats = existing.get("stats", {})
+        year = currentYear
+        stats[str(year)] = calculateStats(teamNumber, year)
+        data["stats"] = stats
+    else:
+        print("File not found, pulling full history...")
+        data["stats"] = getLifetimeStats(teamNumber)
 
     with open(filepath, "w") as file:
         json.dump(data, file, indent=4)
