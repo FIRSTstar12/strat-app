@@ -23,7 +23,7 @@ def getLastUpdatedYear(teamnumber):
 
     if not file.exists():
         return None
-    last_updated_year = datetime.fromtimestamp(file.stat().st_mtime).year
+    last_updated_year = datetime.fromtimestamp(file.stat().st_mtime)
 
     return last_updated_year
 
@@ -107,12 +107,13 @@ def options():
     print("7. Get event data")
     print("8. Pull new team data for one team from The Blue Alliance API")
     print("9. Pull new team data for multiple teams from The Blue Alliance API")
-    print("10. Exit")
+    print("10. Find the best alliance for a set of teams")
+    print("11. Exit")
 
     while True:
-        choice = input("Please select an option (1-10): ")
+        choice = input("Please select an option (1-11): ")
         if choice.strip().isdigit():
             choice_int = int(choice)
-            if 1 <= choice_int <= 10:
+            if 1 <= choice_int <= 11:
                 return choice_int
-        print("Invalid input. Please enter a number from 1 to 10.")
+        print("Invalid input. Please enter a number from 1 to 11.")

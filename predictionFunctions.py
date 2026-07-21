@@ -31,3 +31,27 @@ def predictTeams(team1, team2, year):
     else:
         return None
 
+def findBestAlliance(teams, year):
+    bestAlliance = None
+    bestRating = 0
+
+    for i in range(len(teams)):
+        for j in range(i + 1, len(teams)):
+            for k in range(j + 1, len(teams)):
+                alliance = [teams[i], teams[j], teams[k]]
+                rating = 0
+                for team in alliance:
+                    with open(f"teamInfo/{team}.json", 'r') as file:
+                        data = json.load(file)
+                    teamStats = data['stats'][str(year)]
+                    rating += calculateRating(teamStats)
+
+                if rating > bestRating:
+                    bestRating = rating
+                    bestAlliance = alliance
+                    print(f"Current Best Alliance: {bestAlliance}, Rating: {bestRating:.2f}\n")
+                
+                print(f"Alliance: {alliance}, Rating: {rating:.2f}\n")
+                
+
+    return bestAlliance, bestRating

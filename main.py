@@ -6,7 +6,7 @@ from teamFunctions import getTeam, pullMultipleTeamData
 from teamFunctions import calculateStats    
 from teamFunctions import printStats
 from teamFunctions import compareTeams
-from predictionFunctions import predictTeams
+from predictionFunctions import predictTeams, findBestAlliance
 from allianceFunctions import compareAlliances, buildAlliance
 from utilityFunctions import options
 from eventFunctions import getEventTeams, getMatchInfo, getEventInfo
@@ -30,13 +30,13 @@ while True:
         print("Quitting...")
         exit()
 
-    if choice == 10:
+    if choice == 11:
         clear()
         print("Exiting...")
         clear()
         break
 
-    if choice < 1 or choice > 10:
+    if choice < 1 or choice > 11:
         clear()
         print("Invalid choice")
         input("Press Enter to continue...")
@@ -140,4 +140,35 @@ while True:
                 send_notification(f"Data collection complete for {len(teams)} teams from {eventCode}")
                 print(f"Data collection complete for {len(teams)} teams from {eventCode}")
                 break
+        elif choice == 10:  # finds best alliance for a set of teams
+            clear()
+            manualOrAuto = input("Would you like to enter the team numbers manually or automatically? (m/a): ")
+            if manualOrAuto.lower() == "m":
+                teamNumbers = []
+                while True:
+                    teamNumber = input("Please enter a team number (or type 'done' to finish): ")
+                    if teamNumber.lower() == 'done':
+                        break
+                    elif teamNumber.isdigit():
+                        teamNumbers.append(int(teamNumber))
+                    else:
+                        print("Invalid input. Please enter a valid team number or 'done'.")
+            else:
+                clear()
+                eventCode = input("Please enter the event code: ")
+                teamNumbers = getEventTeams(eventCode)
+                send_notification(f"Pulling data for {len(teamNumbers)} teams from {eventCode}")
+                teamsDone = 0
+                for team in teamNumbers:
+                    if not os.path.exists(f"teamInfo/{team}.json") or getLastUpdatedYear(team) < datetime.now():
+                        pullTeamData(team)
+                    teamsDone += 1
+                    # send_notification(f"Data has been collected for {teamsDone}/{len(teamNumbers)} teams from {eventCode}")
+                    clear()
+                    send_notification(f"Data collection complete for {len(teamNumbers)} teams from {eventCode}")
+                    print(f"Data collection complete for {len(teamNumbers)} teams from {eventCode}")
+            currentYear = datetime.now().year
+            bestAlliance, bestRating = findBestAlliance(teamNumbers, currentYear)
+            print(f"Best Alliance: {bestAlliance} with a rating of {bestRating:.2f}")
+            send_notification("Best Alliance Prediction Complete")
     input("Press Enter to continue...")
