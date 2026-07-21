@@ -110,11 +110,17 @@ while True:
             if manualOrAuto.lower() == "m":
                 pullMultipleTeamData()
             else:
+                clear()
                 eventCode = input("Please enter the event code: ")
                 teams = getEventTeams(eventCode)
+                send_notification(f"Pulling data for {len(teams)} teams from {eventCode}")
+                teamsDone = 0
                 for team in teams:
                     pullTeamData(team)
-                send_notification(f"Data has been collected for {eventCode}")
-        
-
+                    teamsDone += 1
+                    send_notification(f"Data has been collected for {teamsDone}/{len(teams)} teams from {eventCode}")
+                    clear()
+                send_notification(f"Data collection complete for {len(teams)} teams from {eventCode}")
+                print(f"Data collection complete for {len(teams)} teams from {eventCode}")
+                break
     input("Press Enter to continue...")
