@@ -4,7 +4,7 @@ import eventFunctions
 import keys
 from datetime import datetime
 import utilityFunctions
-from predictionFunctions import calculateRating
+from predictionFunctions import calculateRating, compute_min_max
 import json
 
 currentYear = datetime.now().year
@@ -197,8 +197,9 @@ def compareTeams(team1, team2, year):
 
     utilityFunctions.clear()
 
-    rating1 = calculateRating(team1Stats)
-    rating2 = calculateRating(team2Stats)
+    mins, maxs = compute_min_max([team1Stats, team2Stats])
+    rating1 = calculateRating(team1Stats, mins, maxs)
+    rating2 = calculateRating(team2Stats, mins, maxs)
 
     rows = [
         ("Matches", team1Stats['matches'], team2Stats['matches'], 0),
@@ -249,15 +250,21 @@ def getLifetimeStats(teamNumber):
     return lifetime_stats
 
 def pullMultipleTeamData(teamNumbers):
-    teamNumbers = input("Please enter the team numbers separated by commas: ")
-    teamNumbers = [int(x.strip()) for x in teamNumbers.split(",")]
     currentNums = utilityFunctions.get_team_numbers("teamInfo")
+
+    teamsToPull = []
     for teamNumber in teamNumbers:
         update = utilityFunctions.getLastUpdatedYear(teamNumber)
-        if teamNumber in currentNums and os.path.exists(f"teamInfo/{teamNumber}.json") and update is not None and update >= datetime.now().year:
-                    # send_notification(f"Team {teamNumber} already exists in teamInfo folder, skipping...")
-            teamNumbers.remove(teamNumber)
-        utilityFunctions.send_notification(f"Pulling data for teams: {teamNumbers}")
-        for teamNumber in teamNumbers:
-            utilityFunctions.pullTeamData(teamNumber)
-        utilityFunctions.send_notification(f"Data has been collected for {teamNumbers}")
+        if teamNumber in currentNums and update is not None and update.year >= datetime.now().year:
+            print(f"Team {teamNumber} already up to date, skipping...")
+            continue
+        teamsToPull.append(teamNumber)
+
+    if not teamsToPull:
+        print("All teams already up to date.")
+        return
+
+    utilityFunctions.send_notification(f"Pulling data for teams: {teamsToPull}")
+    for teamNumber in teamsToPull:
+        utilityFunctions.pullTeamData(teamNumber)
+    utilityFunctions.send_notification(f"Data has been collected for {teamsToPull}")

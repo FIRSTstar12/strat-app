@@ -1,4 +1,3 @@
-# Main Program
 from datetime import datetime
 import os
 from utilityFunctions import clear, get_team_numbers, getLastUpdatedYear, intro, pullTeamData, send_notification
@@ -125,7 +124,8 @@ while True:
         elif choice == 9:  # pulls new team data for multiple teams from TBA
             manualOrAuto = input("Would you like to enter the team numbers manually or automatically? (m/a): ")
             if manualOrAuto.lower() == "m":
-                pullMultipleTeamData(input("Please enter the team numbers separated by commas: ").split(","))
+                teamNumbers = [int(x.strip()) for x in input("Please enter the team numbers separated by commas: ").split(",")]
+                pullMultipleTeamData(teamNumbers)
             else:
                 clear()
                 eventCode = input("Please enter the event code: ")
