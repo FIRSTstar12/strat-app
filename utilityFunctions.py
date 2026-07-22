@@ -72,7 +72,7 @@ def pullTeamData(teamNumber):
     filepath = os.path.join(folder, filename)
 
     if os.path.exists(filepath):
-        print("File found, refreshing this year's stats only...")
+        print(f"File found, refreshing this year's stats only for team {teamNumber}...")
         with open(filepath, 'r') as file:
             existing = json.load(file)
 
@@ -81,7 +81,7 @@ def pullTeamData(teamNumber):
         stats[str(year)] = calculateStats(teamNumber, year)
         data["stats"] = stats
     else:
-        print("File not found, pulling full history...")
+        print(f"File not found, pulling full history for team {teamNumber}...")
         data["stats"] = getLifetimeStats(teamNumber)
 
     with open(filepath, "w") as file:

@@ -160,15 +160,16 @@ while True:
                 send_notification(f"Pulling data for {len(teamNumbers)} teams from {eventCode}")
                 teamsDone = 0
                 for team in teamNumbers:
-                    if not os.path.exists(f"teamInfo/{team}.json") or getLastUpdatedYear(team) < datetime.now():
-                        pullTeamData(team)
+                    # if not os.path.exists(f"teamInfo/{team}.json") or getLastUpdatedYear(team) < datetime.now():
+                    pullTeamData(team)
                     teamsDone += 1
-                    # send_notification(f"Data has been collected for {teamsDone}/{len(teamNumbers)} teams from {eventCode}")
+                    send_notification(f"Data has been collected for {teamsDone}/{len(teamNumbers)} teams from {eventCode}")
                     clear()
-                    send_notification(f"Data collection complete for {len(teamNumbers)} teams from {eventCode}")
-                    print(f"Data collection complete for {len(teamNumbers)} teams from {eventCode}")
+                    # send_notification(f"Data collection complete for {len(teamNumbers)} teams from {eventCode}")
+                    print(f"Data collection complete for {teamsDone}/{len(teamNumbers)} teams from {eventCode}")
             currentYear = datetime.now().year
             bestAlliance, bestRating = findBestAlliance(teamNumbers, currentYear)
             print(f"Best Alliance: {bestAlliance} with a rating of {bestRating:.2f}")
             send_notification("Best Alliance Prediction Complete")
+            send_notification(f"Best Alliance: {bestAlliance} with a rating of {bestRating:.2f}")
     input("Press Enter to continue...")
