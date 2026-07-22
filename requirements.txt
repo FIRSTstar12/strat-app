@@ -1,3 +1,4 @@
 requests
 keyboard
 plyer
+discord.py
