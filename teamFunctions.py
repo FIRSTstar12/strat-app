@@ -9,6 +9,14 @@ import json
 
 currentYear = datetime.now().year
 
+def has_happened(event):
+        # end_date_str = event.get("end_date")
+        startDate = event.get("start_date")
+        if not startDate:
+            return False
+        start_date = datetime.strptime(startDate, "%Y-%m-%d").date()
+        return start_date < datetime.now().date()
+
 def eventStats(teamNumber, eventKey):
     rankings = requests.get(
         f"{keys.BASE_URL}/event/{eventKey}/rankings",
@@ -55,9 +63,10 @@ def getTeamMatches(team, year):
 
 def addEventStats(stats, teamNumber, year):
     events = eventFunctions.getTeamEvents(teamNumber, year)
-
+    events = [event for event in events if has_happened(event)]
+ 
     stats["events_attended"] = len(events)
-
+ 
     for event in events:
         event_data = eventStats(teamNumber, event["key"])
         opr = getOPR(teamNumber, event["key"])
@@ -91,6 +100,7 @@ def calculateStats(teamNumber, year):
         "events_attended": 0,
         "average_rank": 0,
     }
+
     team_matches = getTeamMatches(teamNumber, year)
 
     current_streak = 0
