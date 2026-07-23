@@ -9,6 +9,7 @@ from predictionFunctions import predictTeams, findBestAlliance
 from allianceFunctions import compareAlliances, buildAlliance
 from utilityFunctions import options
 from eventFunctions import getEventTeams, getMatchInfo, getEventInfo
+from readingData import data
 import keyboard
 import json
 
@@ -29,13 +30,13 @@ while True:
         print("Quitting...")
         exit()
 
-    if choice == 11:
+    if choice == 12:
         clear()
         print("Exiting...")
         clear()
         break
 
-    if choice < 1 or choice > 11:
+    if choice < 1 or choice > 12:
         clear()
         print("Invalid choice")
         input("Press Enter to continue...")
@@ -172,4 +173,15 @@ while True:
             print(f"Best Alliance: {bestAlliance} with a rating of {bestRating:.2f}")
             send_notification("Best Alliance Prediction Complete")
             send_notification(f"Best Alliance: {bestAlliance} with a rating of {bestRating:.2f}")
+        elif choice == 11: 
+            clear()
+            for team in data:
+                print(team)
+            # clear()
+            break
+        elif choice == 12:
+            clear()
+            print("Exiting...")
+            clear()
+            break
     input("Press Enter to continue...")

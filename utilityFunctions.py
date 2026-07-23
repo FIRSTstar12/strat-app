@@ -110,12 +110,13 @@ def options():
     print("8. Pull new team data for one team from The Blue Alliance API")
     print("9. Pull new team data for multiple teams from The Blue Alliance API")
     print("10. Find the best alliance for a set of teams")
-    print("11. Exit")
+    print("11. Read the CSV file")
+    print("12. Exit")
 
     while True:
-        choice = input("Please select an option (1-11): ")
+        choice = input("Please select an option (1-12): ")
         if choice.strip().isdigit():
             choice_int = int(choice)
-            if 1 <= choice_int <= 11:
+            if 1 <= choice_int <= 12:
                 return choice_int
-        print("Invalid input. Please enter a number from 1 to 11.")
+        print("Invalid input. Please enter a number from 1 to 12.")
