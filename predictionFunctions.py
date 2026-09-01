@@ -157,3 +157,45 @@ def findBestAlliance(teams, year):
                 
 
     return bestAlliance, bestRating
+
+def getTopThreeAlliances(teams, year):
+    top_alliances = []
+    team_stats = {}
+
+    for team in teams:
+        with open(f"teamInfo/{team}.json", 'r') as file:
+            data = json.load(file)
+
+        team_stats[team] = data['stats'][str(year)]
+
+    mins, maxs = compute_min_max(list(team_stats.values()))
+
+    # Generate all possible alliances
+    for i in range(len(teams)):
+        for j in range(i + 1, len(teams)):
+            for k in range(j + 1, len(teams)):
+                alliance = [teams[i], teams[j], teams[k]]
+
+                rating = sum(
+                    calculateRating(team_stats[team], mins, maxs)
+                    for team in alliance
+                )
+
+                top_alliances.append((alliance, rating))
+
+    # Highest rated first
+    top_alliances.sort(key=lambda x: x[1], reverse=True)
+
+    # Pick alliances without duplicate teams
+    final_alliances = []
+    used_teams = set()
+
+    for alliance, rating in top_alliances:
+        if not any(team in used_teams for team in alliance):
+            final_alliances.append((alliance, rating))
+            used_teams.update(alliance)
+
+        if len(final_alliances) == 3:
+            break
+
+    return final_alliances

@@ -46,3 +46,15 @@ def compareAlliances(alliance1, alliance2, year):
     else:
         print("Predicted Tie")
     utilityFunctions.send_notification("Alliance analysis complete!")
+
+def getAllianceDetails(alliance, year):
+    alliance_details = {}
+    for team in alliance:
+        if not os.path.exists(f"teamInfo/{team}.json"):
+            print(f"Team {team} does not exist in teamInfo folder, pulling data from TBA...")
+            utilityFunctions.pullTeamData(team)
+        with open(f"teamInfo/{team}.json", 'r') as file:
+            data = json.load(file)
+        print(f"Reading season stats for team {team} {data['nickname']} from {year}")
+        alliance_details[team] = data['stats'][str(year)]
+    return alliance_details

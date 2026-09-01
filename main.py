@@ -5,11 +5,11 @@ from teamFunctions import getTeam, pullMultipleTeamData
 from teamFunctions import calculateStats    
 from teamFunctions import printStats
 from teamFunctions import compareTeams
-from predictionFunctions import predictTeams, findBestAlliance
-from allianceFunctions import compareAlliances, buildAlliance
+from predictionFunctions import getTopThreeAlliances, predictTeams, findBestAlliance
+from allianceFunctions import compareAlliances, buildAlliance, getAllianceDetails
 from utilityFunctions import options
 from eventFunctions import getEventTeams, getMatchInfo, getEventInfo
-from readingData import data
+from readingData import data, getEvents
 import keyboard
 import json
 
@@ -36,7 +36,7 @@ while True:
         clear()
         break
 
-    if choice < 1 or choice > 12:
+    if choice < 1 or choice > 13:
         clear()
         print("Invalid choice")
         input("Press Enter to continue...")
@@ -169,10 +169,18 @@ while True:
                     # send_notification(f"Data collection complete for {len(teamNumbers)} teams from {eventCode}")
                     print(f"Data collection complete for {teamsDone}/{len(teamNumbers)} teams from {eventCode}")
             currentYear = datetime.now().year
-            bestAlliance, bestRating = findBestAlliance(teamNumbers, currentYear)
-            print(f"Best Alliance: {bestAlliance} with a rating of {bestRating:.2f}")
-            send_notification("Best Alliance Prediction Complete")
-            send_notification(f"Best Alliance: {bestAlliance} with a rating of {bestRating:.2f}")
+            # bestAlliance, bestRating = findBestAlliance(teamNumbers, currentYear)
+            topThreeAlliances = getTopThreeAlliances(teamNumbers, currentYear)
+            print("\nTop Three Alliances:")
+            for i, (alliance, rating) in enumerate(topThreeAlliances, start=1):
+                print(f"{i}. Alliance: {alliance}, Rating: {rating:.2f}\n")
+                alliance_details = getAllianceDetails(alliance, currentYear)
+                print("Alliance Details:")
+                for team, stats in alliance_details.items():
+                    print(f"Team {team}: {printStats(stats)}\n")
+            # print(f"Best Alliance: {bestAlliance} with a rating of {bestRating:.2f}")
+            # send_notification("Best Alliance Prediction Complete")
+            # send_notification(f"Best Alliance: {bestAlliance} with a rating of {bestRating:.2f}")
         elif choice == 11: 
             clear()
             for team in data:
@@ -184,4 +192,7 @@ while True:
             print("Exiting...")
             clear()
             break
+        elif choice == 13:
+            with open("events.json", "w") as file:
+                json.dump(getEvents(), file, indent=4)
     input("Press Enter to continue...")

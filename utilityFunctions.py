@@ -117,6 +117,6 @@ def options():
         choice = input("Please select an option (1-12): ")
         if choice.strip().isdigit():
             choice_int = int(choice)
-            if 1 <= choice_int <= 12:
+            if 1 <= choice_int <= 13:
                 return choice_int
         print("Invalid input. Please enter a number from 1 to 12.")
