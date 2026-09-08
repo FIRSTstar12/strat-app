@@ -36,7 +36,7 @@ def rank_teams(all_stats):
         "longest_win_streak": 0.05,
         "average_rp": 0.15,
         "average_opr": 0.15,
-        "events_attended": 0.05,
+        "events_attended": 0.01,
     }
 
     # Calculate percentiles once per stat
