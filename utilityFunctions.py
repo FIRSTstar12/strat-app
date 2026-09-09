@@ -111,7 +111,8 @@ def options():
     print("9. Pull new team data for multiple teams from The Blue Alliance API")
     print("10. Find the best alliance for a set of teams")
     print("11. Read the CSV file")
-    print("12. Exit")
+    print("12. Build an alliance around 1 team")
+    print("13. Exit")
 
     while True:
         choice = input("Please select an option (1-12): ")

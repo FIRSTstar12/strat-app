@@ -30,13 +30,13 @@ while True:
         print("Quitting...")
         exit()
 
-    if choice == 12:
+    if choice == 13 or choice == 14:
         clear()
         print("Exiting...")
         clear()
         break
 
-    if choice < 1 or choice > 13:
+    if choice < 1 or choice > 14:
         clear()
         print("Invalid choice")
         input("Press Enter to continue...")
@@ -189,10 +189,26 @@ while True:
             break
         elif choice == 12:
             clear()
+            centerTeam = int(input("Enter the team that must be on this Alliance: "))
+            eventCode = input("Please enter the event code: ")
+            teamNumbers = getEventTeams(eventCode)
+            # send_notification(f"Pulling data for {len(teamNumbers)} teams from {eventCode}")
+            teamsDone = 0
+            for team in teamNumbers:
+                # if not os.path.exists(f"teamInfo/{team}.json") or getLastUpdatedYear(team) < datetime.now():
+                pullTeamData(team)
+                teamsDone += 1
+                # send_notification(f"Data has been collected for {teamsDone}/{len(teamNumbers)} teams from {eventCode}")
+                clear()
+                # send_notification(f"Data collection complete for {len(teamNumbers)} teams from {eventCode}")
+                print(f"Data collection complete for {teamsDone}/{len(teamNumbers)} teams from {eventCode}")
+            currentYear = datetime.now().year
+        elif choice == 13:
+            clear()
             print("Exiting...")
             clear()
             break
-        elif choice == 13:
+        elif choice == 14:
             with open("events.json", "w") as file:
                 json.dump(getEvents(), file, indent=4)
     input("Press Enter to continue...")
