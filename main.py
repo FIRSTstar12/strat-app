@@ -83,6 +83,7 @@ while True:
             #send_notifcation(f"Lifetime Stat Search Complete for team {teamNumber} {data['nickname']}")
 
         elif choice == 3:  # Compares two teams
+            clear()
             if not os.path.exists(f"teamInfo/{teamNumber}.json"):
                 print(f"Team {teamNumber} does not exist in teamInfo folder, pulling data from TBA...")
                 if internet.lower() == "y":
@@ -101,6 +102,7 @@ while True:
             compareTeams(teamNumber, otherTeam, year)
 
         elif choice == 4:  # Predicts who would win between two teams
+            clear()
             if not os.path.exists(f"teamInfo/{teamNumber}.json"):
                 print(f"Team {teamNumber} does not exist in teamInfo folder, pulling data from TBA...")
                 if internet.lower() == "y":
@@ -125,9 +127,11 @@ while True:
 
     else:
         if choice == 5:  # predicts alliance
+            clear()
             currentYear = datetime.now().year
             compareAlliances(buildAlliance(), buildAlliance(), currentYear)
         elif choice == 6:  # prints match info
+            clear()
             if not internet.lower() == "y":
                 print("You do not have an internet connection, so you cannot pull match data.")
                 input("Press Enter to continue...")
@@ -135,6 +139,7 @@ while True:
             matchCode = input("Please enter the match code: ")
             print(getMatchInfo(matchCode))
         elif choice == 7:  # prints event info
+            clear()
             if not internet.lower() == "y":
                 print("You do not have an internet connection, so you cannot pull event data.")
                 input("Press Enter to continue...")
@@ -142,6 +147,7 @@ while True:
             eventCode = input("Please enter the event code: ")
             getEventInfo(eventCode)
         elif choice == 8:  # pulls new team data from TBA
+            clear()
             if not internet.lower() == "y":
                 print("You do not have an internet connection, so you cannot pull team data.")
                 input("Press Enter to continue...")
@@ -149,6 +155,7 @@ while True:
             teamNumber = int(input("Please enter the team number: "))
             pullTeamData(teamNumber)
         elif choice == 9:  # pulls new team data for multiple teams from TBA
+            clear()
             manualOrAuto = input("Would you like to enter the team numbers manually or automatically? (m/a): ")
             if manualOrAuto.lower() == "m":
                 teamNumbers = [int(x.strip()) for x in input("Please enter the team numbers separated by commas: ").split(",")]
@@ -228,6 +235,7 @@ while True:
             # clear()
             break
         elif choice == 12:
+            clear()
             print("This option is not available yet, but it will be in the future.")
             # clear()
             # centerTeam = int(input("Enter the team that must be on this Alliance: "))

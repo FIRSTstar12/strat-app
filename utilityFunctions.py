@@ -88,13 +88,27 @@ def pullTeamData(teamNumber):
         json.dump(data, file, indent=4)
     #send_notification(f"Data saved for team {teamNumber} {data['nickname']}")
 
+import time
+
+def print_slow(text, delay=0.03):
+    for char in text:
+        print(char, end="", flush=True)
+        time.sleep(delay)
+    print()
+
+
 def intro():
     clear()
-    print("Welcome to the strat helper!")
+
+    print_slow("Welcome to the strat helper!", 0.1)
+
     wait(1.5)
-    print("Note you do need to be connected to the internet to use the program")
+
+    print("\nNote: You do need to be connected to the internet to access the full functionality of the program.")
+
     wait(2)
-    input("Press Enter to continue")
+
+    input("\nPress Enter to continue")
     clear()
 
 def options():
