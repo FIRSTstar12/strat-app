@@ -99,6 +99,7 @@ def calculateStats(teamNumber, year):
         "average_opr": 0,
         "events_attended": 0,
         "average_rank": 0,
+        "name": getTeam(teamNumber)["nickname"]
     }
 
     team_matches = getTeamMatches(teamNumber, year)
@@ -156,21 +157,53 @@ def calculateStats(teamNumber, year):
     return stats
 
 def printStats(stats):
-    print("")
-    print(f"Matches played: {stats['matches']}")
-    print(f"Number of wins: {stats['wins']}")
-    print(f"Number of losses: {stats['losses']}")
-    print(f"Ties: {stats['ties']}")
-    print(f"Win %: {stats['win_percentage']:.2f}%")
-    print(f"Total Score: {stats['total_score']:.2f}")
-    print(f"Average Score: {stats['average_score']:.2f}")
-    print(f"Highest Score: {stats['highest_score']}")
-    print(f"Lowest Score: {stats['lowest_score']:.2f}")
-    print(f"Longest win streak: {stats['longest_win_streak']}")
-    print(f"Average RP: {stats['average_rp']:.2f}")
-    print(f"Average OPR: {stats['average_opr']:.2f}")
-    print(f"Events Attended: {stats['events_attended']}")
-    print(f"Average Rank: {stats['average_rank']:.2f}")
+    print()
+    print("=" * 40)
+    print(f"             {stats['name']} STATS")
+    print("=" * 40)
+
+    print(f"{'Matches Played:':<25} {stats['matches']}")
+    print(f"{'Wins:':<25} {stats['wins']}")
+    print(f"{'Losses:':<25} {stats['losses']}")
+    print(f"{'Ties:':<25} {stats['ties']}")
+    print(f"{'Win %:':<25} {stats['win_percentage']:.2f}%")
+
+    print("-" * 40)
+
+    print(f"{'Total Score:':<25} {stats['total_score']:.2f}")
+    print(f"{'Average Score:':<25} {stats['average_score']:.2f}")
+    print(f"{'Highest Score:':<25} {stats['highest_score']}")
+    print(f"{'Lowest Score:':<25} {stats['lowest_score']:.2f}")
+
+    print("-" * 40)
+
+    print(f"{'Longest Win Streak:':<25} {stats['longest_win_streak']}")
+    print(f"{'Average RP:':<25} {stats['average_rp']:.2f}")
+    print(f"{'Average OPR:':<25} {stats['average_opr']:.2f}")
+
+    print("-" * 40)
+
+    print(f"{'Events Attended:':<25} {stats['events_attended']}")
+    print(f"{'Average Rank:':<25} {stats['average_rank']:.2f}")
+
+    print("=" * 40)
+    print()
+# def printStats(stats):
+#     print("")
+#     print(f"Matches played: {stats['matches']}")
+#     print(f"Number of wins: {stats['wins']}")
+#     print(f"Number of losses: {stats['losses']}")
+#     print(f"Ties: {stats['ties']}")
+#     print(f"Win %: {stats['win_percentage']:.2f}%")
+#     print(f"Total Score: {stats['total_score']:.2f}")
+#     print(f"Average Score: {stats['average_score']:.2f}")
+#     print(f"Highest Score: {stats['highest_score']}")
+#     print(f"Lowest Score: {stats['lowest_score']:.2f}")
+#     print(f"Longest win streak: {stats['longest_win_streak']}")
+#     print(f"Average RP: {stats['average_rp']:.2f}")
+#     print(f"Average OPR: {stats['average_opr']:.2f}")
+#     print(f"Events Attended: {stats['events_attended']}")
+#     print(f"Average Rank: {stats['average_rank']:.2f}")
 
 def getTeam(teamNumber):
     response = requests.get(
