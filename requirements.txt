@@ -1,6 +1,2 @@
 requests
-keyboard
-plyer
-discord.py
 pandas
-wpiutil

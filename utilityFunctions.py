@@ -37,7 +37,7 @@ def send_notification(message):
         "content": message
     }
 
-    response = requests.post(WEBHOOK_URL, json=payload)
+    # response = requests.post(WEBHOOK_URL, json=payload)
 
     # if response.status_code == 204:
     #     notification.notify(
@@ -120,4 +120,4 @@ def options():
             choice_int = int(choice)
             if 1 <= choice_int <= 13:
                 return choice_int
-        print("Invalid input. Please enter a number from 1 to 12.")
+        print("Invalid input. Please enter a number from 1 to 13.")

@@ -15,24 +15,22 @@ import json
 
 clear()
 intro()
-internet = input("Do you have an internet connection? (y/n): ")
-if internet.lower() == "n":
-    print("You will not be able to pull new data from TBA, but you can still use the program with existing data.")
-repull = input("Would you like to repull all team data from TBA? (y/n): ")
 
 if os.path.exists("teamInfo") == False:
     found = input("No teamInfo folder found, would you like to create one? (y/n): ")
     if found == "y":
         os.mkdir("teamInfo")
         print("teamInfo folder created")
+
+internet = input("Do you have an internet connection? (y/n): ")
+if internet.lower() == "n":
+    print("You will not be able to pull new data from TBA, but you can still use the program with existing data.")
+print(" ")
+repull = input("Would you like to repull all team data from TBA? (y/n): ")
+
 while True:
     clear()
     choice = options()
-
-    if keyboard.is_pressed('q'):
-        clear()
-        print("Quitting...")
-        exit()
 
     if choice == 13 or choice == 14:
         clear()
