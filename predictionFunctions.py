@@ -99,12 +99,12 @@ def calculateRating(stats, mins, maxs):
         normalize(stats["win_percentage"], mins["win_percentage"], maxs["win_percentage"]) * 0.25 +
         normalize(stats["average_score"], mins["average_score"], maxs["average_score"]) * 0.20 +
         normalize(stats["longest_win_streak"], mins["longest_win_streak"], maxs["longest_win_streak"]) * 0.05 +
-        normalize(stats["average_rp"], mins["average_rp"], maxs["average_rp"]) * 0.15 +
+        normalize(stats["average_rp"], mins["average_rp"], maxs["average_rp"]) * 0.05 +
         normalize(stats["average_opr"], mins["average_opr"], maxs["average_opr"]) * 0.15 +
-        normalize(stats["events_attended"], mins["events_attended"], maxs["events_attended"]) * 0.10 +
+        normalize(stats["events_attended"], mins["events_attended"], maxs["events_attended"]) * 0.05 +
         normalize(1 / (stats["average_rank"] + 1), 
                   1 / (maxs["average_rank"] + 1), 
-                  1 / (mins["average_rank"] + 1)) * 0.10
+                  1 / (mins["average_rank"] + 1)) * 0.05
     )
 
 def predictTeams(team1, team2, year):
