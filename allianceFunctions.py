@@ -10,7 +10,7 @@ def buildAlliance():
     team3 = int(input("Enter in the third team number: "))
     return [team1,team2,team3]
 
-def compareAlliances(alliance1, alliance2, year):
+def compareAlliances(alliance1, alliance2, year, internet = "y"):
 
     utilityFunctions.clear()
     print(f"{alliance1[0]}, {alliance1[1]}, {alliance1[2]} v.s {alliance2[0]}, {alliance2[1]}, {alliance2[2]}")
@@ -22,7 +22,8 @@ def compareAlliances(alliance1, alliance2, year):
     for team in alliance1 + alliance2:
         if not os.path.exists(f"teamInfo/{team}.json"):
             print(f"Team {team} does not exist in teamInfo folder, pulling data from TBA...")
-            utilityFunctions.pullTeamData(team)
+            if internet.lower() == "y":
+                utilityFunctions.pullTeamData(team)
         with open(f"teamInfo/{team}.json", 'r') as file:
             data = json.load(file)
         print(f"Reading season stats for team {team} {data['nickname']} from {year}")
@@ -45,14 +46,19 @@ def compareAlliances(alliance1, alliance2, year):
         print("Alliance 2 predicted winner")
     else:
         print("Predicted Tie")
-    utilityFunctions.send_notification("Alliance analysis complete!")
+    # utilityFunctions.#send_notification("Alliance analysis complete!")
 
-def getAllianceDetails(alliance, year):
+def getAllianceDetails(alliance, year, internet = "y"):
     alliance_details = {}
     for team in alliance:
         if not os.path.exists(f"teamInfo/{team}.json"):
             print(f"Team {team} does not exist in teamInfo folder, pulling data from TBA...")
-            utilityFunctions.pullTeamData(team)
+            if internet.lower() == "y":
+                utilityFunctions.pullTeamData(team)
+            else:
+                print("You do not have an internet connection, so you cannot pull data for this team.")
+                input("Press Enter to continue...")
+                continue
         with open(f"teamInfo/{team}.json", 'r') as file:
             data = json.load(file)
         print(f"Reading season stats for team {team} {data['nickname']} from {year}")

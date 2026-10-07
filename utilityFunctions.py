@@ -39,21 +39,21 @@ def send_notification(message):
 
     response = requests.post(WEBHOOK_URL, json=payload)
 
-    if response.status_code == 204:
-        notification.notify(
-        title="FRC Stats Analyzer",
-        message="Discord notification sent!",
-        timeout=5
-    )
-        # print("Discord notification sent!")
-    else:
-        print(f"Failed to send notification: {response.status_code}")
-        notification.notify(
-        title="FRC Stats Analyzer",
-        message=f"Failed to send notification: {response.status_code}",
-        timeout=5
-        )
-        # print(response.text)
+    # if response.status_code == 204:
+    #     notification.notify(
+    #     title="FRC Stats Analyzer",
+    #     message="Discord notification sent!",
+    #     timeout=5
+    # )
+    #     # print("Discord notification sent!")
+    # else:
+    #     print(f"Failed to send notification: {response.status_code}")
+    #     notification.notify(
+    #     title="FRC Stats Analyzer",
+    #     message=f"Failed to send notification: {response.status_code}",
+    #     timeout=5
+    #     )
+    #     # print(response.text)
 
 
 currentYear = datetime.now().year
@@ -86,7 +86,7 @@ def pullTeamData(teamNumber):
 
     with open(filepath, "w") as file:
         json.dump(data, file, indent=4)
-    send_notification(f"Data saved for team {teamNumber} {data['nickname']}")
+    #send_notification(f"Data saved for team {teamNumber} {data['nickname']}")
 
 def intro():
     clear()

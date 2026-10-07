@@ -219,7 +219,7 @@ def compareTeams(team1, team2, year):
     for label, v1, v2, decimals in rows:
         print(f"{label:<10}{v1:>7.{decimals}f}{v2:>7.{decimals}f}")
     print("=" * 25)
-    utilityFunctions.send_notification("Comparison Complete")
+    # utilityFunctions.#send_notification("Comparison Complete")
 
 def getTeamScore(match, teamNumber):
     red = match["alliances"]["red"]
@@ -264,7 +264,7 @@ def pullMultipleTeamData(teamNumbers):
         print("All teams already up to date.")
         return
 
-    utilityFunctions.send_notification(f"Pulling data for teams: {teamsToPull}")
+    # utilityFunctions.#send_notification(f"Pulling data for teams: {teamsToPull}")
     for teamNumber in teamsToPull:
         utilityFunctions.pullTeamData(teamNumber)
-    utilityFunctions.send_notification(f"Data has been collected for {teamsToPull}")
+    # utilityFunctions.#send_notification(f"Data has been collected for {teamsToPull}")
