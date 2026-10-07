@@ -96,7 +96,7 @@ def normalize(value, min_value, max_value):
 
 def calculateRating(stats, mins, maxs):
     return (
-        normalize(stats["win_percentage"], mins["win_percentage"], maxs["win_percentage"]) * 0.25 +
+        normalize(stats["win_percentage"], mins["win_percentage"], maxs["win_percentage"]) * 0.30 +
         normalize(stats["average_score"], mins["average_score"], maxs["average_score"]) * 0.20 +
         normalize(stats["longest_win_streak"], mins["longest_win_streak"], maxs["longest_win_streak"]) * 0.05 +
         normalize(stats["average_rp"], mins["average_rp"], maxs["average_rp"]) * 0.15 +
