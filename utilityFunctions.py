@@ -99,25 +99,41 @@ def intro():
 
 def options():
     clear()
-    print("Options:")
-    print("1. Look up stats for one team for one season")
-    print("2. Look up the stats for one team for every season they have ever particpated in")
-    print("3. Compare two teams")
-    print("4. Predict who will win between two teams")
-    print("5. Predict which alliance will win")
-    print("6. Get match data")
-    print("7. Get event data")
-    print("8. Pull new team data for one team from The Blue Alliance API")
-    print("9. Pull new team data for multiple teams from The Blue Alliance API")
-    print("10. Find the best alliance for a set of teams")
-    print("11. Read the CSV file")
-    print("12. Build an alliance around 1 team")
-    print("13. Exit")
+
+    print("=" * 60)
+    print("                    STRAT APP")
+    print("=" * 60)
+    print("                         OPTIONS")
+    print("-" * 60)
+
+    options_list = [
+        "Look up stats for one team for one season",
+        "Look up stats for one team across every season",
+        "Compare two teams",
+        "Predict who will win between two teams",
+        "Predict which alliance will win",
+        "Get match data",
+        "Get event data",
+        "Pull new team data for one team from The Blue Alliance API",
+        "Pull new team data for multiple teams from The Blue Alliance API",
+        "Find the best alliance for a set of teams",
+        "Read the CSV file",
+        "Build an alliance around one team",
+        "Exit"
+    ]
+
+    for number, option in enumerate(options_list, start=1):
+        print(f"  {number:>2}. {option}")
+
+    print("-" * 60)
 
     while True:
-        choice = input("Please select an option (1-12): ")
-        if choice.strip().isdigit():
+        choice = input("\nSelect an option (1-13): ").strip()
+
+        if choice.isdigit():
             choice_int = int(choice)
+
             if 1 <= choice_int <= 13:
                 return choice_int
+
         print("Invalid input. Please enter a number from 1 to 13.")
