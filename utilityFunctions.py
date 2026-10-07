@@ -8,6 +8,7 @@ from teamFunctions import calculateStats, getLifetimeStats
 from teamFunctions import getTeam
 #from plyer import notification
 from pathlib import Path
+import urllib.request
 
 def get_team_numbers(folder):
     teams = []
@@ -88,7 +89,18 @@ def pullTeamData(teamNumber):
         json.dump(data, file, indent=4)
     #send_notification(f"Data saved for team {teamNumber} {data['nickname']}")
 
-import time
+def checkInternet():
+    try:
+        urllib.request.urlopen("https://www.google.com", timeout=3)
+        return True
+    except:
+        return False
+def checkTBAConnection():
+    try:
+        urllib.request.urlopen("https://www.thebluealliance.com", timeout=3)
+        return True
+    except:
+        return False
 
 def print_slow(text, delay=0.03):
     for char in text:
@@ -97,18 +109,30 @@ def print_slow(text, delay=0.03):
     print()
 
 
-def intro():
+def intro(internetConnection):
     clear()
+    conneted = "ONLINE" if internetConnection else "OFFLINE"
 
-    print_slow("Welcome to the strat helper!", 0.1)
+    print("=" * 60)
+    print("                    STRAT HELPER")
+    print("=" * 60)
 
-    wait(1.5)
+    print()
 
-    print("\nNote: You do need to be connected to the internet to access the full functionality of the program.")
+    print_slow("> Initializing...")
+    wait(0.7)
 
-    wait(2)
+    print_slow(f"> Checking connection... ({conneted})")
+    wait(0.7)
 
-    input("\nPress Enter to continue")
+    print_slow("> Loading team data...")
+    wait(0.7)
+
+    print_slow("> Ready.")
+
+    print()
+    input("Press Enter to continue...")
+
     clear()
 
 def options():

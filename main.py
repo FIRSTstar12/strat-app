@@ -1,20 +1,25 @@
 from datetime import datetime
 import os
-from utilityFunctions import clear, get_team_numbers, getLastUpdatedYear, intro, pullTeamData#send_notifcation
+from utilityFunctions import checkTBAConnection, clear, get_team_numbers, getLastUpdatedYear, intro, pullTeamData#send_notifcation
 from teamFunctions import getTeam, pullMultipleTeamData
 from teamFunctions import calculateStats    
 from teamFunctions import printStats
 from teamFunctions import compareTeams
 from predictionFunctions import getTopThreeAlliances, predictTeams, findBestAlliance
 from allianceFunctions import compareAlliances, buildAlliance, getAllianceDetails
-from utilityFunctions import options
+from utilityFunctions import options, checkInternet
 from eventFunctions import getEventTeams, getMatchInfo, getEventInfo
 from readingData import  getEvents
 import keyboard
 import json
 
+connection = checkInternet()
+internet = "y" if connection else "n"
+terminate = False
+TBAConnection = checkTBAConnection()
+
 clear()
-intro()
+intro(connection)
 
 if os.path.exists("teamInfo") == False:
     found = input("No teamInfo folder found, would you like to create one? (y/n): ")
@@ -22,13 +27,34 @@ if os.path.exists("teamInfo") == False:
         os.mkdir("teamInfo")
         print("teamInfo folder created")
 
-internet = input("Do you have an internet connection? (y/n): ")
 if internet.lower() == "n":
     print("You will not be able to pull new data from TBA, but you can still use the program with existing data.")
 print(" ")
-repull = input("Would you like to repull all team data from TBA? (y/n): ")
 
 while True:
+    repull = input("Would you like to repull all team data from TBA? (y/n): ").lower().strip()
+
+    if repull in ("y", "n"):
+        break
+
+    print("Invalid input. Please enter y or n.")
+
+if repull.lower() == "y" and internet.lower() == "n":
+    print("You do not have an internet connection, so you cannot repull data from TBA.")
+    repull = "n"
+elif repull.lower() == "y" and internet.lower() == "y" and os.path.exists("teamInfo") == False:
+    print("You do not have any team data to repull, so you cannot repull data from TBA.")
+    repull = "n"
+    terminate = True
+elif repull.lower() == "y" and internet.lower() == "y" and os.path.exists("teamInfo") == True and TBAConnection == False:
+    print("You do not have a connection to TBA, so you cannot repull data from TBA.")
+    repull = "n"
+
+while True:
+    if terminate:
+        print("Exiting...")
+        clear()
+        break
     clear()
     choice = options()
 
