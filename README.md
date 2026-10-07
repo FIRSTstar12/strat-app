@@ -118,6 +118,5 @@ with. An alliance's rating is the sum of its three teams' ratings.
   `keys.py` (see Setup).
 - If you see a "file not found" error for a team, pull that team's data first (option 8 or 9).
 - If it errors please make a pr so I can fix it
-- If you are running on **Linux** make sure you use this command `sudo python main.py`
 
 ---
