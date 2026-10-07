@@ -9,7 +9,7 @@ from predictionFunctions import getTopThreeAlliances, predictTeams, findBestAlli
 from allianceFunctions import compareAlliances, buildAlliance, getAllianceDetails
 from utilityFunctions import options
 from eventFunctions import getEventTeams, getMatchInfo, getEventInfo
-from readingData import data, getEvents
+from readingData import  getEvents
 import keyboard
 import json
 

@@ -6,7 +6,7 @@ import requests
 from keys import WEBHOOK_URL
 from teamFunctions import calculateStats, getLifetimeStats
 from teamFunctions import getTeam
-from plyer import notification
+#from plyer import notification
 from pathlib import Path
 
 def get_team_numbers(folder):
