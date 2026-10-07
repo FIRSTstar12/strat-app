@@ -104,7 +104,7 @@ def calculateRating(stats, mins, maxs):
         normalize(stats["events_attended"], mins["events_attended"], maxs["events_attended"]) * 0.05 +
         normalize(1 / (stats["average_rank"] + 1), 
                   1 / (maxs["average_rank"] + 1), 
-                  1 / (mins["average_rank"] + 1)) * 0.05
+                  1 / (mins["average_rank"] + 1)) * 0.10
     )
 
 def predictTeams(team1, team2, year):
