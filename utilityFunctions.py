@@ -124,8 +124,9 @@ def intro(internetConnection):
 
     print_slow(f"> Checking connection... ({conneted})")
     wait(0.7)
+    fileCount = len(os.listdir("teamInfo"))
 
-    print_slow("> Loading team data...")
+    print_slow(f"> Loading team data... ({fileCount} teams found)")
     wait(0.7)
 
     print_slow("> Ready.")
