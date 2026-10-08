@@ -192,21 +192,40 @@ while True:
                 pullMultipleTeamData(teamNumbers)
             else:
                 clear()
-                eventCode = input("Please enter the event code: ")
-                teams = getEventTeams(eventCode)
-                #send_notifcation(f"Pulling data for {len(teams)} teams from {eventCode}")
-                teamsDone = 0
-                if not internet.lower() == "y":
-                    print("You do not have an internet connection, so you cannot pull team data.")
-                    input("Press Enter to continue...")
-                    continue
-                for team in teams:
-                    pullTeamData(team)
-                    teamsDone += 1
-                    #send_notifcation(f"Data has been collected for {teamsDone}/{len(teams)} teams from {eventCode}")
-                    clear()
-                #send_notifcation(f"Data collection complete for {len(teams)} teams from {eventCode}")
-                print(f"Data collection complete for {len(teams)} teams from {eventCode}")
+                manyEvents = input("Would you like to pull data for multiple events? (y/n): ")
+                if manyEvents.lower() == "y":
+                    eventCodes = input("Please enter the event codes separated by commas: ").split(",")
+                    for eventCode in eventCodes:
+                        teams = getEventTeams(eventCode.strip())
+                        #send_notifcation(f"Pulling data for {len(teams)} teams from {eventCode.strip()}")
+                        teamsDone = 0
+                        if not internet.lower() == "y":
+                            print("You do not have an internet connection, so you cannot pull team data.")
+                            input("Press Enter to continue...")
+                            continue
+                        for team in teams:
+                            pullTeamData(team)
+                            teamsDone += 1
+                            #send_notifcation(f"Data has been collected for {teamsDone}/{len(teams)} teams from {eventCode.strip()}")
+                            clear()
+                        #send_notifcation(f"Data collection complete for {len(teams)} teams from {eventCode.strip()}")
+                            print(f"Data collection complete for {len(teams)} teams from {eventCode.strip()}")
+                else:
+                    eventCode = input("Please enter the event code: ")
+                    teams = getEventTeams(eventCode)
+                    #send_notifcation(f"Pulling data for {len(teams)} teams from {eventCode}")
+                    teamsDone = 0
+                    if not internet.lower() == "y" or not TBAConnection:
+                        print("You do not have an internet connection, so you cannot pull team data.")
+                        input("Press Enter to continue...")
+                        continue
+                    for team in teams:
+                        pullTeamData(team)
+                        teamsDone += 1
+                        #send_notifcation(f"Data has been collected for {teamsDone}/{len(teams)} teams from {eventCode}")
+                        clear()
+                        #send_notifcation(f"Data collection complete for {len(teams)} teams from {eventCode}")
+                        print(f"Data collection complete for {len(teams)} teams from {eventCode}")
                 break
         elif choice == 10:  # finds best alliance for a set of teams
             clear()
