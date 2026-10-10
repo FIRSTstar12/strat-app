@@ -13,8 +13,8 @@ def buildAlliance():
 def compareAlliances(alliance1, alliance2, year, internet = "y"):
 
     utilityFunctions.clear()
-    print(f"{alliance1[0]}, {alliance1[1]}, {alliance1[2]} v.s {alliance2[0]}, {alliance2[1]}, {alliance2[2]}")
-    print(" ")
+    # print(f"{alliance1[0]}, {alliance1[1]}, {alliance1[2]} v.s {alliance2[0]}, {alliance2[1]}, {alliance2[2]}")
+    # print(" ")
 
     # Load stats for every team in both alliances first, so we can find the
     # min/max of each stat across the whole group before rating anyone
@@ -26,19 +26,39 @@ def compareAlliances(alliance1, alliance2, year, internet = "y"):
                 utilityFunctions.pullTeamData(team)
         with open(f"teamInfo/{team}.json", 'r') as file:
             data = json.load(file)
-        print(f"Reading season stats for team {team} {data['nickname']} from {year}")
+        # print(f"Reading season stats for team {team} {data['nickname']} from {year}")
         all_stats[team] = data['stats'][str(year)]
 
     mins, maxs = compute_min_max(list(all_stats.values()))
 
+    utilityFunctions.clear()
+    print(f"Alliance 1: {alliance1[0]}, {alliance1[1]}, {alliance1[2]}")
+    for item in alliance1:
+        print(f"Team {item}: {teamFunctions.printStats(all_stats[item])}\n")
+    # for team, stats in alliance1.items():
+    #     print(f"Team {team}: {teamFunctions.printStats(stats)}\n")
+
     print("")
+
+    print(f"Alliance 2: {alliance2[0]}, {alliance2[1]}, {alliance2[2]}")
+    for item in alliance2:
+        print(f"Team {item}: {teamFunctions.printStats(all_stats[item])}\n")
+    # for team, stats in alliance2.items():
+    #     print(f"Team {team}: {teamFunctions.printStats(stats)}\n")
+    
+    print("")
+
+    print("=" * 60)
 
     alliance1Score = sum(calculateRating(all_stats[team], mins, maxs) for team in alliance1)
     alliance2Score = sum(calculateRating(all_stats[team], mins, maxs) for team in alliance2)
 
     print(f"Alliance 1 rating: {alliance1Score:.2f}")
     print(f"Alliance 2 rating: {alliance2Score:.2f}")
-    print("")
+    # print("")
+
+    print("=" * 60)
+    print(" ")
 
     if alliance1Score > alliance2Score:
         print("Alliance 1 predicted winner")

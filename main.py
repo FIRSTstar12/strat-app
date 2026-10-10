@@ -159,6 +159,7 @@ while True:
             clear()
             currentYear = datetime.now().year
             compareAlliances(buildAlliance(), buildAlliance(), currentYear)
+            
         elif choice == 6:  # prints match info
             clear()
             if not internet.lower() == "y":
@@ -167,6 +168,7 @@ while True:
                 continue
             matchCode = input("Please enter the match code: ")
             print(getMatchInfo(matchCode))
+            clear()
         elif choice == 7:  # prints event info
             clear()
             if not internet.lower() == "y":
