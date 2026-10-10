@@ -17,16 +17,15 @@ import json
 terminate = False
 TBAConnection = True
 
-clear()
-intro()
-
-
 
 if os.path.exists("teamInfo") == False:
     found = input("No teamInfo folder found, would you like to create one? (y/n): ")
     if found == "y":
         os.mkdir("teamInfo")
         print("teamInfo folder created")
+
+clear()
+intro()
 
 clear()
 internet = input("Do you have an internet connection? (y/n): ").lower().strip()
