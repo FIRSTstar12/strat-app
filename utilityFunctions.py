@@ -109,7 +109,7 @@ def print_slow(text, delay=0.03):
     print()
 
 
-def intro(internetConnection):
+def intro(internetConnection = False):
     clear()
     conneted = "ONLINE" if internetConnection else "OFFLINE"
 

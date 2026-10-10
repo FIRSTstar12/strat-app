@@ -13,19 +13,23 @@ from readingData import  getEvents
 import keyboard
 import json
 
-connection = checkInternet()
-internet = "y" if connection else "n"
+# connection = checkInternet()
 terminate = False
-TBAConnection = checkTBAConnection()
+TBAConnection = True
 
 clear()
-intro(connection)
+intro()
+
+
 
 if os.path.exists("teamInfo") == False:
     found = input("No teamInfo folder found, would you like to create one? (y/n): ")
     if found == "y":
         os.mkdir("teamInfo")
         print("teamInfo folder created")
+
+clear()
+internet = input("Do you have an internet connection? (y/n): ").lower().strip()
 
 if internet.lower() == "n":
     print("You will not be able to pull new data from TBA, but you can still use the program with existing data.")
@@ -249,7 +253,7 @@ while True:
                 eventCode = input("Please enter the event code: ")
                 teamNumbers = getEventTeams(eventCode)
                 if repull.lower() == "y":
-                    # pullMultipleTeamData(teamNumbers)
+                    pullMultipleTeamData(teamNumbers)
                     #send_notifcation(f"Pulling data for {len(teamNumbers)} teams from {eventCode}")
                     teamsDone = 0
                     for team in teamNumbers:
@@ -260,6 +264,8 @@ while True:
                         clear()
                     # #send_notifcation(f"Data collection complete for {len(teamNumbers)} teams from {eventCode}")
                         print(f"Data collection complete for {teamsDone}/{len(teamNumbers)} teams from {eventCode}")
+                else:
+                    print("Using existing data for teams from the event.")
             currentYear = datetime.now().year
             # bestAlliance, bestRating = findBestAlliance(teamNumbers, currentYear)
             topThreeAlliances = getTopThreeAlliances(teamNumbers, currentYear)
